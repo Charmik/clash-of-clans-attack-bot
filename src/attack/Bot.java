@@ -19,11 +19,11 @@ import static attack.Variables.*;
  */
 public class Bot {
 
-    public static boolean getArchers() throws InterruptedException, AWTException {
+    private static boolean getArchers() throws InterruptedException, AWTException {
         robot.mouseMove(379, 30);
         click(100);
         CompareImages ci = new CompareImages(get_screen(), Variables.barrack, //left
-                275, 75, 600, 570, new ArrayList<>(), 0.1f);
+                275, 75, 600, 570, new ArrayList<>(), 0.1f, 0);
         ci.compare();
 
         if (ci.getAnswer().size() == 1) {
@@ -49,7 +49,7 @@ public class Bot {
         return true;
     }
 
-    public static void pushTroops(Point start, Point finish, int cnt) throws InterruptedException {
+    private static void pushTroops(Point start, Point finish, int cnt) throws InterruptedException {
         int x0 = Math.abs(start.x - finish.x) + 1;
         int y0 = Math.abs(start.y - finish.y) + 1;
         for (int i = 1; i <= cnt; i++) {
@@ -64,7 +64,7 @@ public class Bot {
         }
     }
 
-    public static void fight() throws InterruptedException, AWTException {
+    private static void fight() throws InterruptedException, AWTException {
         ArrayList<BufferedImage> heroes = new ArrayList<>();
         heroes.add(king);
         heroes.add(queen);
@@ -78,7 +78,7 @@ public class Bot {
         }
 
         CompareImages ci = new CompareImages(get_screen(), Variables.clanCastleFight,
-                311, 600, 488, 717, new ArrayList<>(), 0.7f);
+                311, 600, 488, 717, new ArrayList<>(), 0.7f, 0);
         ci.compare();
         Point clanCastleCoordinates = null;
         if (ci.getAnswer().size() == 2) {
@@ -98,6 +98,7 @@ public class Bot {
         }
         if (clanCastleCoordinates != null) {
             robot.mouseMove(clanCastleCoordinates.x, clanCastleCoordinates.y);
+            click(500);
             pushTroops(t1, t2, 10);
             pushTroops(t2, t3, 10);
         }
@@ -133,34 +134,42 @@ public class Bot {
             return false;
         }
 
+
         list.add(new CompareImages(bf, Variables.goldFullStorage,
-                400, 300, 850, 550, new ArrayList<>(), 0.09f));
+                // 200, 100, 1000, 750, new ArrayList<>(), 0.09f, 1L));
+                0, 0, 1100, 750, new ArrayList<>(), 0.09f, 1L));
+        //0, 0, 1, 1, new ArrayList<>(), 0.09f, 1L));
+
         list.add(new CompareImages(bf, Variables.elixirFullStorage,
-                400, 300, 850, 550, new ArrayList<>(), 0.09f));
+                200, 100, 1000, 750, new ArrayList<>(), 0.09f, 2L));
 
         list.add(new CompareImages(bf, Variables.emptyElixir, //left
-                230, 230, 550, 500, new ArrayList<>(), 0.1f));
+                200, 200, 600, 600, new ArrayList<>(), 0.1f, 3L));
         list.add(new CompareImages(bf, Variables.emptyElixir, //top
-                420, 30, 850, 350, new ArrayList<>(), 0.1f));
+                300, 30, 900, 400, new ArrayList<>(), 0.1f, 4L));
         list.add(new CompareImages(bf, Variables.emptyElixir, //right
-                800, 220, 1090, 500, new ArrayList<>(), 0.1f));
+                700, 150, 1100, 600, new ArrayList<>(), 0.1f, 5L));
         list.add(new CompareImages(bf, Variables.emptyElixir, //bot
-                488, 200, 700, 484, new ArrayList<>(), 0.1f));
+                400, 200, 800, 500, new ArrayList<>(), 0.1f, 6L));
 
         list.add(new CompareImages(bf, Variables.emptyElixir2, //top
-                230, 230, 550, 500, new ArrayList<>(), 0.1f));
+                200, 200, 600, 600, new ArrayList<>(), 0.1f, 7L));
         list.add(new CompareImages(bf, Variables.emptyElixir2, //left
-                420, 30, 850, 350, new ArrayList<>(), 0.1f));
+                300, 30, 900, 400, new ArrayList<>(), 0.1f, 8L));
         list.add(new CompareImages(bf, Variables.emptyElixir2, //right
-                800, 220, 1090, 500, new ArrayList<>(), 0.1f));
+                700, 150, 1100, 600, new ArrayList<>(), 0.1f, 9L));
+
         list.add(new CompareImages(bf, Variables.emptyElixir2, //bot
-                488, 200, 700, 484, new ArrayList<>(), 0.1f));
+                400, 200, 800, 500, new ArrayList<>(), 0.1f, 10L));
 
         ThreadPoolExecutor threadPoolExecutor = new ThreadPoolExecutor(1, 10, 1000, TimeUnit.MILLISECONDS, new ArrayBlockingQueue<>(10));
+        //ThreadPoolExecutor threadPoolExecutor = new ThreadPoolExecutor(1,10, 1000, TimeUnit.MILLISECONDS, )
         for (CompareImages aList : list)
-            threadPoolExecutor.execute(aList);
+            threadPoolExecutor.submit(aList);
+        //threadPoolExecutor.execute(aList);
 
-        int elixir = getElixir(bf);
+        int elixir = 1000500;//getElixir(bf);
+
 
         System.out.println(gold + " " + elixir);
         if (gold < localGold || elixir < localElixir) {
@@ -169,25 +178,29 @@ public class Bot {
             }
         }
         threadPoolExecutor.shutdown();
-        while (!threadPoolExecutor.awaitTermination(20, TimeUnit.SECONDS)) {
+        System.out.println(threadPoolExecutor.getActiveCount());
+        while (threadPoolExecutor.getCompletedTaskCount() < 10) {
+            System.out.println(threadPoolExecutor.getCompletedTaskCount());
             Thread.sleep(500);
         }
-        //System.out.print("time=" + (System.currentTimeMillis() - startTime) + "  ");
-        for (CompareImages aList : list) {
-            if (aList.getAnswer().size() == 2) {
-                return false;
-            }
+        //CompletableFuture completableFuture = new CompletableFuture();
+        /*
+        while (!threadPoolExecutor.awaitTermination(20, TimeUnit.SECONDS)) {
+            Thread.sleep(500);
+            System.out.println(threadPoolExecutor.getActiveCount());
         }
-        //saveImage(gold, elixir);
-        //System.out.println();
-        System.out.println(gold + " " + elixir);
-        return true;
 
+        System.out.println("--------------------");
+        System.out.println("--------------------");
+        System.out.println("--------------------");
+        System.out.println("--------------------");
+        */
+        return list.stream().filter(e -> e.getAnswer().size() == 2).count() > 0;
     }
 
     public static boolean fullCamp() throws AWTException, InterruptedException, IOException {
         CompareImages ci = new CompareImages(get_screen(), Variables.fullCamp, //left
-                startCamp.x, startCamp.y, endCamp.x, endCamp.y, new ArrayList<>(), 0.1f);
+                startCamp.x, startCamp.y, endCamp.x, endCamp.y, new ArrayList<>(), 0.1f, 0);
         ci.compare();
         return ci.getAnswer().size() == 2;
     }
@@ -208,7 +221,7 @@ public class Bot {
     public static void collect() throws AWTException, IOException, InterruptedException {
         BufferedImage bf = get_screen();
         CompareImages ci = new CompareImages(bf, Variables.goldCircle, //left
-                300, 10, 1076, 560, new ArrayList<>(), 0.7f);
+                300, 10, 1076, 560, new ArrayList<>(), 0.7f, 0);
         ci.compare();
         if (ci.getAnswer().size() == 2) {
             Point point = ci.getAnswer().get(0);
@@ -219,7 +232,7 @@ public class Bot {
 
     public static void restart() throws InterruptedException {
         Thread.sleep(1000);
-        robot.mouseMove(10, 10);
+        robot.mouseMove(75, 10);
         click(2000);
         robot.mouseMove(1330, 740);
         click(2000);
@@ -230,12 +243,19 @@ public class Bot {
         Thread.sleep(1000);
         robot.keyPress(KeyEvent.VK_ENTER);
         robot.keyPress(KeyEvent.VK_ENTER);
+
         Thread.sleep(30 * 1000);
+
+        /* robot.mouseMove(130, 639);
+        click(2000);
+        */
         robot.mouseMove(tryTheseApps.x, tryTheseApps.y);
         click(2000);
-        robot.mouseMove(10, 10);
+        robot.mouseMove(75, 10);
         click(2000);
         robot.mouseMove(500, 500);
+        click(2000);
+
     }
 
     public static BufferedImage get_screen() throws AWTException {
@@ -247,6 +267,7 @@ public class Bot {
 
     public static void init() throws AWTException, IOException, InterruptedException {
         String path = new File(".").getCanonicalPath();
+        String separater = Variables.separator;
         System.out.println("path = " + path);
         king = null;
         queen = null;
@@ -260,17 +281,17 @@ public class Bot {
         robot.keyRelease(KeyEvent.VK_WINDOWS);
         */
         try {
-            queen = ImageIO.read(new File(path + "\\queen.png"));
-            king = ImageIO.read(new File(path + "\\king.png"));
-            elixirFullStorage = ImageIO.read(new File(path + "\\fullElixirStorage.png"));
-            emptyElixir = ImageIO.read(new File(path + "\\emptyElixir.png"));
-            emptyElixir2 = ImageIO.read(new File(path + "\\emptyElixir2.png"));
-            goldFullStorage = ImageIO.read(new File(path + "\\fullGoldStorage.png"));
-            fullCamp = ImageIO.read(new File(path + "\\fullCamp.png"));
-            goldCircle = ImageIO.read(new File(path + "\\goldCircle.png"));
-            barrack = ImageIO.read(new File(path + "\\barrack.png"));
-            clanCastle = ImageIO.read(new File(path + "\\clanCastle.png"));
-            clanCastleFight = ImageIO.read(new File(path + "\\clanCastleFight.png"));
+            queen = ImageIO.read(new File(path + separater + "queen.png"));
+            king = ImageIO.read(new File(path + separater + "king.png"));
+            elixirFullStorage = ImageIO.read(new File(path + separater + "fullElixirStorage.png"));
+            emptyElixir = ImageIO.read(new File(path + separater + "emptyElixir.png"));
+            emptyElixir2 = ImageIO.read(new File(path + separater + "emptyElixir2.png"));
+            goldFullStorage = ImageIO.read(new File(path + separater + "fullGoldStorage.png"));
+            fullCamp = ImageIO.read(new File(path + separater + "fullCamp.png"));
+            goldCircle = ImageIO.read(new File(path + separater + "goldCircle.png"));
+            barrack = ImageIO.read(new File(path + separater + "barrack.png"));
+            clanCastle = ImageIO.read(new File(path + separater + "clanCastle.png"));
+            clanCastleFight = ImageIO.read(new File(path + separater + "clanCastleFight.png"));
 
         } catch (IOException e) {
             System.out.println("cant download image_king/queen/elixir" + e.getMessage() + e);
@@ -294,11 +315,11 @@ public class Bot {
     }
 
     public static void getTroops() throws AWTException, InterruptedException {
-        robot.mouseMove(10,10);
+        robot.mouseMove(10, 10);
         click(500);
         BufferedImage bf = get_screen();
         CompareImages ci = new CompareImages(bf, Variables.clanCastle, //left
-                950, 140, 1171, 484, new ArrayList<>(), 0.3f);
+                950, 140, 1171, 484, new ArrayList<>(), 0.3f, 0);
         ci.compare();
         if (ci.getAnswer().size() == 2) {
             Point point = ci.getAnswer().get(0);
@@ -309,7 +330,12 @@ public class Bot {
             robot.mouseMove(856, 260);
             click(1000);
         }
+        for (int i = 0; i < 2; i++) {
+            robot.mouseMove(10, 10);
+            click(500);
+        }
     }
+
     public static void run() throws AWTException, IOException, InterruptedException {
         init();
         boolean needRestart = true;

@@ -1,4 +1,5 @@
 package attack;
+
 import java.awt.*;
 import java.awt.image.BufferedImage;
 
@@ -18,33 +19,33 @@ public class Variables {
     public static final Point goblinInBarrack = new Point(810, 350);
     public static final Point nextInBarrack = new Point(1050, 370);
 
-        /*static Point reload = new Point(590, 520);
-    static Point attack = new Point(70, 750); //comp
-    static Point findMatch = new Point(170, 650); //comp
-    static Point next = new Point(1200, 650);
-    static Point exitBattle = new Point(620, 700);
-    static Point firstBarrack = new Point(820, 160);
-    static Point buttonTrainTroops = new Point(820, 760);
-    static Point archersInBarrack = new Point(520, 460);
-    static Point nextInBarrack = new Point(1000, 500);
-    static Point drill = new Point(1120, 520);
-    static Point agreeFight = new Point(700, 550);
-    static Point barTroopsStart = new Point(300, 690);
-    static Point barTroopsEnd = new Point(450, 770);
-    static Point startGold = new Point(43,213);
-    static Point endGold = new Point(140,240);
-    static Point startElixir = new Point(45,240);
-    static Point endElixir = new Point(140,265);
-    static Point t1 = new Point(500, 165);
-    static Point t2 = new Point(880, 170);
-    static Point t3 = new Point(1200, 470);
-    static Point t4 = new Point(910, 670);
-    static Point t5 = new Point(400, 670);
-    static Point t6 = new Point(150, 470);
+    /*static Point reload = new Point(590, 520);
+static Point attack = new Point(70, 750); //comp
+static Point findMatch = new Point(170, 650); //comp
+static Point next = new Point(1200, 650);
+static Point exitBattle = new Point(620, 700);
+static Point firstBarrack = new Point(820, 160);
+static Point buttonTrainTroops = new Point(820, 760);
+static Point archersInBarrack = new Point(520, 460);
+static Point nextInBarrack = new Point(1000, 500);
+static Point drill = new Point(1120, 520);
+static Point agreeFight = new Point(700, 550);
+static Point barTroopsStart = new Point(300, 690);
+static Point barTroopsEnd = new Point(450, 770);
+static Point startGold = new Point(43,213);
+static Point endGold = new Point(140,240);
+static Point startElixir = new Point(45,240);
+static Point endElixir = new Point(140,265);
+static Point t1 = new Point(500, 165);
+static Point t2 = new Point(880, 170);
+static Point t3 = new Point(1200, 470);
+static Point t4 = new Point(910, 670);
+static Point t5 = new Point(400, 670);
+static Point t6 = new Point(150, 470);
 */
-    public static final Point drill1 = new Point(427,284);
-    public static final Point drill2 = new Point(936,280);
-    public static final Point drill3 = new Point(735,500);
+    public static final Point drill1 = new Point(427, 284);
+    public static final Point drill2 = new Point(936, 280);
+    public static final Point drill3 = new Point(735, 500);
     public static final Point agreeFight = new Point(776, 424);
     public static final Point barTroopsStart = new Point(250, 580);
     public static final Point barTroopsEnd = new Point(600, 677);
@@ -66,7 +67,8 @@ public class Variables {
     public static final Point startCamp = new Point(187, 120);
     public static final Point endCamp = new Point(548, 495);
     public static final Point returnToHome = new Point(140, 630);
-    public static final Point tryTheseApps = new Point(960,510);
+    public static final Point tryTheseApps = new Point(960, 510);
+    public static final String separator;
     static Robot robot;
     static BufferedImage king;
     static BufferedImage queen;
@@ -80,13 +82,10 @@ public class Variables {
     static BufferedImage clanCastle;
     static BufferedImage clanCastleFight;
 
-    public static final String separator;
-
     static {
         if ("Mac OS X".equals(System.getProperty("os.name"))) {
             separator = "/";
-        }
-        else {
+        } else {
             separator = "\\";
         }
     }

@@ -80,15 +80,7 @@ public class Recognition {
                 }
             }
         }
-        //for (int i = 0; i < answer.size(); i++) {
-        //System.out.print(answer.get(i).x + " " + digits.get(i) + ";");
-        //}
-        //System.out.println();
-        int ans = 0;
-        for (Integer digit : digits) {
-            ans = ans * 10 + digit;
-        }
-        return ans;
+        return digits.stream().reduce(0, (a, b) -> a * 10 + b);
     }
 
     public static class Struct {

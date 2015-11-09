@@ -7,8 +7,9 @@ import java.util.ArrayList;
 /**
  * Created by charm on 5/21/14.
  */
-public class CompareImages implements Runnable{
+public class CompareImages implements Runnable {
     private static final float D = (float) Math.sqrt(3);
+    private static final float xx = 255.0f;
     private final float preciseCompare;
     private BufferedImage image1;
     private BufferedImage image2;
@@ -21,7 +22,7 @@ public class CompareImages implements Runnable{
     private ArrayList<Point> answer;
     private float denominator;
     private int digit;
-    private static final float xx = 255.0f;
+    private long index;
 
     CompareImages(BufferedImage image1, BufferedImage image2, int x1, int y1, int x2, int y2,
                   ArrayList<Recognition.Struct> points) {
@@ -29,12 +30,12 @@ public class CompareImages implements Runnable{
     }
 
     CompareImages(BufferedImage image1, BufferedImage image2, int x1, int y1, int x2, int y2,
-                  ArrayList<Recognition.Struct> points, float precise) {
-        this(image1, image2, x1, y1, x2, y2, points, precise, -1);
+                  ArrayList<Recognition.Struct> points, float precise, long index) {
+        this(image1, image2, x1, y1, x2, y2, points, precise, -1, index);
     }
 
     CompareImages(BufferedImage image1, BufferedImage image2, int x1, int y1, int x2, int y2,
-                  ArrayList<Recognition.Struct> points, float precise, int digit) {
+                  ArrayList<Recognition.Struct> points, float precise, int digit, long index) {
         this.image1 = image1;
         this.image2 = image2;
         this.x1 = x1;
@@ -47,6 +48,7 @@ public class CompareImages implements Runnable{
         denominator = D * (image2.getHeight() * image2.getWidth());
         preciseCompare = precise * denominator;
         this.digit = digit;
+        this.index = index;
     }
 
     public CompareImages compare() {
@@ -86,6 +88,7 @@ public class CompareImages implements Runnable{
         if (lowestDiff < precise) {
             answer.add(new Point(10000, 10000));
         }
+        System.out.println("index=" + index);
         return this;
     }
 
@@ -93,8 +96,8 @@ public class CompareImages implements Runnable{
         float variation = 0.0f;
         for (int x = 0; x < im1.getWidth(); x++) {
             for (int y = 0; y < im1.getHeight(); y++) {
-                int rgb1 = im1.getRGB(x,y);
-                int rgb2 = im2.getRGB(x,y);
+                int rgb1 = im1.getRGB(x, y);
+                int rgb2 = im2.getRGB(x, y);
                 float r1 = ((rgb1 >> 16) & 0xFF);
                 float r2 = ((rgb2 >> 16) & 0xFF);
                 float g1 = ((rgb1 >> 8) & 0xFF);
