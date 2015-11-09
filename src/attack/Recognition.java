@@ -12,7 +12,7 @@ import java.util.ArrayList;
  */
 public class Recognition {
 
-    public static int getNumber(Point start, Point finish, String add, BufferedImage screen) throws IOException, AWTException {
+    public static int getNumber(Point start, Point finish, String add, BufferedImage screen) throws IOException {
         String path = new File(".").getCanonicalPath();
         ArrayList<Integer> digits = new ArrayList<>();
         ArrayList<Struct> answer = new ArrayList<>();
@@ -84,8 +84,8 @@ public class Recognition {
     }
 
     public static class Struct {
-        Point point;
-        int digit;
+        final Point point;
+        final int digit;
 
         Struct(Point point, int digit) {
             this.point = point;

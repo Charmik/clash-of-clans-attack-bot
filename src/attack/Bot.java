@@ -19,7 +19,7 @@ import static attack.Variables.*;
  */
 public class Bot {
 
-    private static boolean getArchers() throws InterruptedException, AWTException {
+    private static void getArchers() throws InterruptedException, AWTException {
         robot.mouseMove(379, 30);
         click(100);
         CompareImages ci = new CompareImages(get_screen(), Variables.barrack, //left
@@ -27,7 +27,7 @@ public class Bot {
         ci.compare();
 
         if (ci.getAnswer().size() == 1) {
-            return false;
+            return;
         }
         robot.mouseMove(ci.getAnswer().get(0).x + 10, ci.getAnswer().get(0).y + 10);
         click(5000);
@@ -46,7 +46,6 @@ public class Bot {
         robot.mouseMove(1015, 111);
         click(1000);
         Thread.sleep(500);
-        return true;
     }
 
     private static void pushTroops(Point start, Point finish, int cnt) throws InterruptedException {
@@ -123,7 +122,7 @@ public class Bot {
     }
 
 
-    public static boolean goodBase(int gold, BufferedImage bf) throws AWTException, InterruptedException, IOException {
+    public static boolean goodBase(int gold, BufferedImage bf) throws AWTException, InterruptedException {
         int localGold = 200000;
         int localElixir = 200000;
         ArrayList<CompareImages> list = new ArrayList<>();
@@ -164,8 +163,7 @@ public class Bot {
 
         ThreadPoolExecutor threadPoolExecutor = new ThreadPoolExecutor(1, 10, 1000, TimeUnit.MILLISECONDS, new ArrayBlockingQueue<>(10));
         //ThreadPoolExecutor threadPoolExecutor = new ThreadPoolExecutor(1,10, 1000, TimeUnit.MILLISECONDS, )
-        for (CompareImages aList : list)
-            threadPoolExecutor.submit(aList);
+        list.forEach(threadPoolExecutor::submit);
         //threadPoolExecutor.execute(aList);
 
         int elixir = 1000500;//getElixir(bf);
@@ -198,27 +196,27 @@ public class Bot {
         return list.stream().filter(e -> e.getAnswer().size() == 2).count() > 0;
     }
 
-    public static boolean fullCamp() throws AWTException, InterruptedException, IOException {
+    private static boolean fullCamp() throws AWTException {
         CompareImages ci = new CompareImages(get_screen(), Variables.fullCamp, //left
                 startCamp.x, startCamp.y, endCamp.x, endCamp.y, new ArrayList<>(), 0.1f, 0);
         ci.compare();
         return ci.getAnswer().size() == 2;
     }
 
-    public static void click(int time) throws InterruptedException {
+    private static void click(int time) throws InterruptedException {
         Thread.sleep(time);
         robot.mousePress(InputEvent.BUTTON1_MASK);
         robot.mouseRelease(InputEvent.BUTTON1_MASK);
     }
 
-    public static void decreaseZoom() throws InterruptedException {
+    private static void decreaseZoom() throws InterruptedException {
         for (int w = 0; w < 10; w++) {
             robot.keyPress(KeyEvent.VK_DOWN);
             Thread.sleep(3000);
         }
     }
 
-    public static void collect() throws AWTException, IOException, InterruptedException {
+    private static void collect() throws AWTException, InterruptedException {
         BufferedImage bf = get_screen();
         CompareImages ci = new CompareImages(bf, Variables.goldCircle, //left
                 300, 10, 1076, 560, new ArrayList<>(), 0.7f, 0);
@@ -230,7 +228,7 @@ public class Bot {
         }
     }
 
-    public static void restart() throws InterruptedException {
+    private static void restart() throws InterruptedException {
         Thread.sleep(1000);
         robot.mouseMove(75, 10);
         click(2000);
@@ -258,7 +256,7 @@ public class Bot {
 
     }
 
-    public static BufferedImage get_screen() throws AWTException {
+    private static BufferedImage get_screen() throws AWTException {
         Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
         Rectangle screenRectangle = new Rectangle(screenSize);
         Robot robot = new Robot();
@@ -314,7 +312,7 @@ public class Bot {
         return Recognition.getNumber(startElixir, endElixir, "_", image);
     }
 
-    public static void getTroops() throws AWTException, InterruptedException {
+    private static void getTroops() throws AWTException, InterruptedException {
         robot.mouseMove(10, 10);
         click(500);
         BufferedImage bf = get_screen();
@@ -458,7 +456,7 @@ public class Bot {
         }
     }
 
-    public static void saveImage(int gold, int elixir) throws AWTException, IOException {
+    private static void saveImage(int gold, int elixir) throws AWTException, IOException {
         BufferedImage bf = get_screen();
         File outputFile = new File("screenshots/" + String.valueOf(gold) + "_" + String.valueOf(elixir) + ".png");
         System.out.println(outputFile.getAbsolutePath());
