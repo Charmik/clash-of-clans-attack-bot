@@ -1,0 +1,10 @@
+*.iml
+*.jar
+*.xml
+*.idea
+*.dll
+Tess4J
+out
+screenshots
+imagesForTests
+forSave
