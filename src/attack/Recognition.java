@@ -12,7 +12,7 @@ import java.util.ArrayList;
  */
 public class Recognition {
 
-    public static int getNumber(Point start, Point finish, String add, BufferedImage screen) throws IOException {
+    public static int getNumber(Point start, Point finish, String add, BufferedImage screen) throws IOException, AWTException {
         String path = new File(".").getCanonicalPath();
         ArrayList<Integer> digits = new ArrayList<>();
         ArrayList<Struct> answer = new ArrayList<>();
@@ -80,12 +80,20 @@ public class Recognition {
                 }
             }
         }
-        return digits.stream().reduce(0, (a, b) -> a * 10 + b);
+        //for (int i = 0; i < answer.size(); i++) {
+        //System.out.print(answer.get(i).x + " " + digits.get(i) + ";");
+        //}
+        //System.out.println();
+        int ans = 0;
+        for (Integer digit : digits) {
+            ans = ans * 10 + digit;
+        }
+        return ans;
     }
 
     public static class Struct {
-        final Point point;
-        final int digit;
+        Point point;
+        int digit;
 
         Struct(Point point, int digit) {
             this.point = point;

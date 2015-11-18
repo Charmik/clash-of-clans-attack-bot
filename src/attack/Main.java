@@ -7,6 +7,11 @@ import java.io.IOException;
 public class Main {
 
     public static void main(String[] args) throws IOException, AWTException, InterruptedException {
+        /*Bot.init();
+        for(int i = 0; i < 1000; i++) {
+        	System.out.println(Bot.fullCamp());
+        }*/
+
         Bot.run();
 
         Bot.init();

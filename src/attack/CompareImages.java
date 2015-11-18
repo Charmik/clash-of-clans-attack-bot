@@ -10,19 +10,18 @@ import java.util.ArrayList;
 public class CompareImages implements Runnable {
     private static final float D = (float) Math.sqrt(3);
     private static final float xx = 255.0f;
-    final private float preciseCompare;
-    final private BufferedImage image1;
-    final private BufferedImage image2;
-    final private int x1;
-    final private int y1;
-    final private int x2;
-    final private int y2;
-    final private ArrayList<Recognition.Struct> points;
-    final private float precise;
-    final private ArrayList<Point> answer;
-    final private float denominator;
-    final private int digit;
-    final private long index;
+    private final float preciseCompare;
+    private BufferedImage image1;
+    private BufferedImage image2;
+    private int x1;
+    private int y1;
+    private int x2;
+    private int y2;
+    private ArrayList<Recognition.Struct> points;
+    private float precise;
+    private ArrayList<Point> answer;
+    private float denominator;
+    private int digit;
 
     CompareImages(BufferedImage image1, BufferedImage image2, int x1, int y1, int x2, int y2,
                   ArrayList<Recognition.Struct> points) {
@@ -30,12 +29,12 @@ public class CompareImages implements Runnable {
     }
 
     CompareImages(BufferedImage image1, BufferedImage image2, int x1, int y1, int x2, int y2,
-                  ArrayList<Recognition.Struct> points, float precise, long index) {
-        this(image1, image2, x1, y1, x2, y2, points, precise, -1, index);
+                  ArrayList<Recognition.Struct> points, float precise) {
+        this(image1, image2, x1, y1, x2, y2, points, precise, -1);
     }
 
-    private CompareImages(BufferedImage image1, BufferedImage image2, int x1, int y1, int x2, int y2,
-                          ArrayList<Recognition.Struct> points, float precise, int digit, long index) {
+    CompareImages(BufferedImage image1, BufferedImage image2, int x1, int y1, int x2, int y2,
+                  ArrayList<Recognition.Struct> points, float precise, int digit) {
         this.image1 = image1;
         this.image2 = image2;
         this.x1 = x1;
@@ -48,7 +47,6 @@ public class CompareImages implements Runnable {
         denominator = D * (image2.getHeight() * image2.getWidth());
         preciseCompare = precise * denominator;
         this.digit = digit;
-        this.index = index;
     }
 
     public CompareImages compare() {
@@ -88,7 +86,6 @@ public class CompareImages implements Runnable {
         if (lowestDiff < precise) {
             answer.add(new Point(10000, 10000));
         }
-        System.out.println("index=" + index);
         return this;
     }
 
