@@ -1,6 +1,7 @@
 package attack;
 import java.awt.*;
 import java.awt.image.BufferedImage;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 /**
  * Created by Charm on 15.06.14.
@@ -67,6 +68,8 @@ static Point t6 = new Point(150, 470);
     public static final Point endCamp = new Point(548, 495);
     public static final Point returnToHome = new Point(140, 630);
     public static final Point tryTheseApps = new Point(960, 510);
+    public static final Point disconnectStart = new Point(306, 269);
+    public static final Point disconnectFinish = new Point(515, 321);
     public static final String separator;
     static Robot robot;
     static BufferedImage king;
@@ -80,6 +83,10 @@ static Point t6 = new Point(150, 470);
     static BufferedImage barrack;
     static BufferedImage clanCastle;
     static BufferedImage clanCastleFight;
+    static BufferedImage disconnect;
+
+    static AtomicBoolean needToWait;
+    static long sleepAfterDisconnect = 60000;
 
     static {
         if ("Mac OS X".equals(System.getProperty("os.name"))) {

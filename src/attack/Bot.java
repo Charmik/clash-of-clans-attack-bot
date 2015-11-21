@@ -11,6 +11,7 @@ import java.util.ArrayList;
 import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 import static attack.Variables.*;
 
@@ -34,7 +35,7 @@ public class Bot {
         robot.mouseMove(buttonTrainTroops.x, buttonTrainTroops.y);
         click(5000);
         Thread.sleep(5000);
-        for (int step = 0; step < 4; step++) {
+        for (int step = 0; step < cntOfBarracks; step++) {
             robot.mouseMove(archersInBarrack.x, archersInBarrack.y);
             for (int i = 0; i < 75; i++) {
                 click(100);
@@ -130,7 +131,7 @@ public class Bot {
         if (bf == null) {
             bf = get_screen();
         }
-        if (gold < localGold) {
+        if (gold < localGold && gold != -1) {
             return false;
         }
 
@@ -157,23 +158,25 @@ public class Bot {
         list.add(new CompareImages(bf, Variables.emptyElixir2, //bot
                 400, 200, 800, 500, new ArrayList<>(), 0.1f));
 
-        ThreadPoolExecutor threadPoolExecutor = new ThreadPoolExecutor(1, 10, 1000, TimeUnit.MILLISECONDS, new ArrayBlockingQueue<>(10));
-        for (CompareImages aList : list)
+        ThreadPoolExecutor threadPoolExecutor = new ThreadPoolExecutor(Runtime.getRuntime().availableProcessors()
+                , 10, 10, TimeUnit.SECONDS, new ArrayBlockingQueue<>(10));
+        for (CompareImages aList : list) {
             threadPoolExecutor.execute(aList);
+        }
+        threadPoolExecutor.shutdown();
 
         int elixir = getElixir(bf);
 
         System.out.println(gold + " " + elixir);
         if (gold < localGold || elixir < localElixir) {
             if (gold != -1) {
+                threadPoolExecutor.shutdownNow();
                 return false;
             }
         }
-        threadPoolExecutor.shutdown();
-        while (!threadPoolExecutor.awaitTermination(20, TimeUnit.SECONDS)) {
-            Thread.sleep(500);
-        }
-        //System.out.print("time=" + (System.currentTimeMillis() - startTime) + "  ");
+
+        threadPoolExecutor.awaitTermination(20, TimeUnit.SECONDS);
+
         for (CompareImages aList : list) {
             if (aList.getAnswer().size() == 2) {
                 return false;
@@ -280,11 +283,16 @@ public class Bot {
             barrack = ImageIO.read(new File(path + separater + "barrack.png"));
             clanCastle = ImageIO.read(new File(path + separater + "clanCastle.png"));
             clanCastleFight = ImageIO.read(new File(path + separater + "clanCastleFight.png"));
-
+            disconnect = ImageIO.read(new File(path + separater + "disconnect.png"));
         } catch (IOException e) {
             System.out.println("cant download image_king/queen/elixir" + e.getMessage() + e);
             return;
         }
+        needToWait = new AtomicBoolean();
+        Disconnect disconnect = new Disconnect();
+        Thread thread = new Thread(disconnect);
+        //thread.start();
+
         Thread.sleep(2000);
     }
 
@@ -335,7 +343,7 @@ public class Bot {
             decreaseZoom();
             robot.mouseMove(660, 580);  //exit fight
             click(300);
-            int count = 0;
+            int count = -1;
             boolean restartAfterBuild = false;
             Thread.sleep(300);
             robot.mouseMove(10, 10);
@@ -345,17 +353,29 @@ public class Bot {
                 robot.keyPress(KeyEvent.VK_ENTER);
                 robot.keyPress(KeyEvent.VK_ENTER);
                 count++;
+                if (fullCamp()) {
+                    break;
+                }
                 if (count == 15) {
                     restartAfterBuild = true;
                     break;
                 }
                 if (count % 5 == 0) {
                     getArchers();
-
+                }
+                if (fullCamp()) {
+                    break;
                 }
                 collectDarkElixir();
+                if (fullCamp()) {
+                    break;
+                }
                 for (int i = 0; i < 4; i++) {
+                    checkDisconnectAndWait();
                     collect();
+                }
+                if (fullCamp()) {
+                    break;
                 }
                 getTroops();
             }
@@ -439,6 +459,7 @@ public class Bot {
         drills.add(drill2);
         drills.add(drill3);
         for (Point drill : drills) {
+            checkDisconnectAndWait();
             robot.mouseMove(drill.x, drill.y);
             click(100);
             robot.keyPress(KeyEvent.VK_ENTER);
@@ -451,6 +472,16 @@ public class Bot {
         File outputFile = new File("screenshots/" + String.valueOf(gold) + "_" + String.valueOf(elixir) + ".png");
         System.out.println(outputFile.getAbsolutePath());
         ImageIO.write(bf, "png", outputFile);
+    }
+
+    private static void checkDisconnectAndWait() {
+        if (needToWait.get()) {
+            try {
+                Thread.sleep(Variables.sleepAfterDisconnect);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+        }
     }
 
 
