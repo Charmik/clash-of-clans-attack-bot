@@ -291,7 +291,7 @@ public class Bot {
         }
         needToWait = new AtomicBoolean();
         Disconnect disconnect = new Disconnect();
-        Thread thread = new Thread(disconnect);
+        //Thread thread = new Thread(disconnect);
         //thread.start();
 
         Thread.sleep(2000);

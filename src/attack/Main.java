@@ -35,7 +35,7 @@ public class Main {
         */
 
 
-        Robot robot = new Robot();
+        //Robot robot = new Robot();
         long sum = 0;
         int index = 0;
         BufferedImage screen = Bot.get_screen();
