@@ -290,7 +290,7 @@ public class Bot {
             return;
         }
         needToWait = new AtomicBoolean();
-        Disconnect disconnect = new Disconnect();
+        //Disconnect disconnect = new Disconnect();
         //Thread thread = new Thread(disconnect);
         //thread.start();
 
@@ -453,13 +453,16 @@ public class Bot {
         }
     }
 
+    /*
     public static void saveImage(int gold, int elixir) throws AWTException, IOException {
         BufferedImage bf = get_screen();
         File outputFile = new File("screenshots/" + String.valueOf(gold) + "_" + String.valueOf(elixir) + ".png");
         System.out.println(outputFile.getAbsolutePath());
         ImageIO.write(bf, "png", outputFile);
     }
+    */
 
+    /*
     private static void checkDisconnectAndWait() {
         if (needToWait.get()) {
             try {
@@ -469,6 +472,7 @@ public class Bot {
             }
         }
     }
+    */
 
 
 }
