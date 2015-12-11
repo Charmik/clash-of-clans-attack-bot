@@ -27,14 +27,24 @@ public class Recognition {
             } else {
                 digit = i;
             }
+            /*
+            if (i == 4) {
+                digit = 7;
+            }
+            else if (i == 7) {
+                digit = 4;
+            }
+            */
             try {
                 String addFrontToOne = "";
                 int cycle = 1;
                 if (digit == 1) {
-                    cycle = 5;
+                    cycle = 6;
+                } else if (digit == 7) {
+                    cycle = 3;
                 }
                 for (int j = 0; j < cycle; j++) {
-                    if (digit == 1) {
+                    if ((digit == 1 || digit == 7) && j > 0) {
                         addFrontToOne += "_";
                     }
                     BufferedImage image = ImageIO.read(new File(path + Variables.separator + addFrontToOne + digit + add + ".png"));

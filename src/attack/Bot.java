@@ -22,30 +22,30 @@ public class Bot {
 
     public static boolean getArchers() throws InterruptedException, AWTException {
         robot.mouseMove(379, 30);
-        click(100);
-        CompareImages ci = new CompareImages(get_screen(), Variables.barrack, //left
-                275, 75, 600, 570, new ArrayList<>(), 0.1f);
+        waitAndClick(100);
+        CompareImages ci = new CompareImages(get_screen(), Variables.barrack,
+                firstBarrackStart.x, firstBarrackStart.y, firstBarrackFinish.x, firstBarrackFinish.y, new ArrayList<>(), 0.1f);
         ci.compare();
 
         if (ci.getAnswer().size() == 1) {
             return false;
         }
         robot.mouseMove(ci.getAnswer().get(0).x + 10, ci.getAnswer().get(0).y + 10);
-        click(5000);
+        waitAndClick(5000);
         robot.mouseMove(buttonTrainTroops.x, buttonTrainTroops.y);
-        click(5000);
+        waitAndClick(5000);
         Thread.sleep(5000);
         for (int step = 0; step < cntOfBarracks; step++) {
             robot.mouseMove(archersInBarrack.x, archersInBarrack.y);
-            for (int i = 0; i < 75; i++) {
-                click(100);
+            for (int i = 0; i < trainTroops; i++) {
+                waitAndClick(100);
             }
             robot.mouseMove(nextInBarrack.x, nextInBarrack.y);
-            click(2000);
+            waitAndClick(2000);
             Thread.sleep(2000);
         }
-        robot.mouseMove(1015, 111);
-        click(1000);
+        robot.mouseMove(closeBarrack.x, closeBarrack.y);
+        waitAndClick(1000);
         Thread.sleep(500);
         return true;
     }
@@ -61,7 +61,7 @@ public class Bot {
             else
                 y = start.y + ((double) y0 / cnt) * i;
             robot.mouseMove((int) x, (int) y);
-            click(50);
+            waitAndClick(50);
         }
     }
 
@@ -79,7 +79,8 @@ public class Bot {
         }
 
         CompareImages ci = new CompareImages(get_screen(), Variables.clanCastleFight,
-                311, 600, 488, 717, new ArrayList<>(), 0.7f);
+                clanCastleFightStart.x, clanCastleFightStart.y,
+                clanCastleFightFinish.x, clanCastleFightFinish.y, new ArrayList<>(), 0.7f);
         ci.compare();
         Point clanCastleCoordinates = null;
         if (ci.getAnswer().size() == 2) {
@@ -99,7 +100,7 @@ public class Bot {
         }
         if (clanCastleCoordinates != null) {
             robot.mouseMove(clanCastleCoordinates.x, clanCastleCoordinates.y);
-            click(500);
+            waitAndClick(500);
             pushTroops(t1, t2, 10);
             pushTroops(t2, t3, 10);
         }
@@ -107,9 +108,9 @@ public class Bot {
         for (Point coordinatesHero : coordinatesHeroes) {
             Thread.sleep(100);
             robot.mouseMove(coordinatesHero.x, coordinatesHeroes.get(0).y);
-            click(100);
+            waitAndClick(100);
             pushTroops(t1, t2, 3);
-            click(100);
+            waitAndClick(100);
         }
         Thread.sleep(13000);
 
@@ -119,7 +120,7 @@ public class Bot {
                 Thread.sleep(12000);
             }
             robot.mouseMove(coordinatesHeroes.get(i).x, coordinatesHeroes.get(i).y);
-            click(100);
+            waitAndClick(100);
         }
     }
 
@@ -191,19 +192,19 @@ public class Bot {
 
     public static boolean fullCamp() throws AWTException, InterruptedException, IOException {
         CompareImages ci = new CompareImages(get_screen(), Variables.fullCamp, //left
-                startCamp.x, startCamp.y, endCamp.x, endCamp.y, new ArrayList<>(), 0.1f);
+                startCamp.x, startCamp.y, endCamp.x, endCamp.y, new ArrayList<>(), 0.09f);
         ci.compare();
         return ci.getAnswer().size() == 2;
     }
 
-    public static void click(int time) throws InterruptedException {
+    public static void waitAndClick(int time) throws InterruptedException {
         Thread.sleep(time);
         robot.mousePress(InputEvent.BUTTON1_MASK);
         robot.mouseRelease(InputEvent.BUTTON1_MASK);
     }
 
     public static void decreaseZoom() throws InterruptedException {
-        for (int w = 0; w < 10; w++) {
+        for (int w = 0; w < countDecreaseZoom; w++) {
             robot.keyPress(KeyEvent.VK_DOWN);
             Thread.sleep(3000);
         }
@@ -211,26 +212,26 @@ public class Bot {
 
     public static void collect() throws AWTException, IOException, InterruptedException {
         BufferedImage bf = get_screen();
-        CompareImages ci = new CompareImages(bf, Variables.goldCircle, //left
-                300, 10, 1076, 560, new ArrayList<>(), 0.7f);
+        CompareImages ci = new CompareImages(bf, Variables.goldCircle,
+                collectStart.x, collectStart.y, collectFinish.x, collectFinish.y, new ArrayList<>(), 0.7f);
         ci.compare();
         if (ci.getAnswer().size() == 2) {
             Point point = ci.getAnswer().get(0);
             robot.mouseMove(point.x, point.y);
-            click(1000);
+            waitAndClick(1000);
         }
     }
 
     public static void restart() throws InterruptedException {
         Thread.sleep(1000);
         robot.mouseMove(75, 10);
-        click(2000);
+        waitAndClick(2000);
         robot.mouseMove(1330, 740);
-        click(2000);
+        waitAndClick(2000);
         robot.mouseMove(EmulatorOnDekstop.x, EmulatorOnDekstop.y);
 
-        click(2000);
-        click(2000);
+        waitAndClick(2000);
+        waitAndClick(2000);
         Thread.sleep(1000);
         robot.keyPress(KeyEvent.VK_ENTER);
         robot.keyPress(KeyEvent.VK_ENTER);
@@ -238,14 +239,14 @@ public class Bot {
         Thread.sleep(30 * 1000);
 
         /* robot.mouseMove(130, 639);
-        click(2000);
+        waitAndClick(2000);
         */
         robot.mouseMove(tryTheseApps.x, tryTheseApps.y);
-        click(2000);
+        waitAndClick(2000);
         robot.mouseMove(75, 10);
-        click(2000);
+        waitAndClick(2000);
         robot.mouseMove(500, 500);
-        click(2000);
+        waitAndClick(2000);
 
     }
 
@@ -311,8 +312,8 @@ public class Bot {
     }
 
     public static void getTroops() throws AWTException, InterruptedException {
-        robot.mouseMove(10, 10);
-        click(500);
+        robot.mouseMove(85, 10);
+        waitAndClick(500);
         BufferedImage bf = get_screen();
         CompareImages ci = new CompareImages(bf, Variables.clanCastle, //left
                 950, 140, 1171, 484, new ArrayList<>(), 0.3f);
@@ -320,15 +321,15 @@ public class Bot {
         if (ci.getAnswer().size() == 2) {
             Point point = ci.getAnswer().get(0);
             robot.mouseMove(point.x + 5, point.y + 15);
-            click(1000);
+            waitAndClick(1000);
             robot.mouseMove(623, 618);
-            click(1000);
+            waitAndClick(1000);
             robot.mouseMove(856, 260);
-            click(1000);
+            waitAndClick(1000);
         }
         for (int i = 0; i < 2; i++) {
-            robot.mouseMove(10, 10);
-            click(500);
+            robot.mouseMove(85, 10);
+            waitAndClick(500);
         }
     }
 
@@ -342,12 +343,12 @@ public class Bot {
             }
             decreaseZoom();
             robot.mouseMove(660, 580);  //exit fight
-            click(300);
+            waitAndClick(300);
             int count = -1;
             boolean restartAfterBuild = false;
             Thread.sleep(300);
             robot.mouseMove(10, 10);
-            click(300);
+            waitAndClick(300);
             while (!fullCamp()) {
                 decreaseZoom();
                 robot.keyPress(KeyEvent.VK_ENTER);
@@ -366,12 +367,11 @@ public class Bot {
                 if (fullCamp()) {
                     break;
                 }
-                collectDarkElixir();
                 if (fullCamp()) {
                     break;
                 }
-                for (int i = 0; i < 4; i++) {
-                    checkDisconnectAndWait();
+                for (int i = 0; i < 5; i++) {
+                    //checkDisconnectAndWait();
                     collect();
                 }
                 if (fullCamp()) {
@@ -389,17 +389,17 @@ public class Bot {
             if (!fullCamp()) {
                 continue;
             }
-            click(2000);
+            waitAndClick(2000);
             robot.mouseMove(attackButton.x, attackButton.y);
-            click(5000);
+            waitAndClick(5000);
             Thread.sleep(5000);
 
             robot.mouseMove(findMatch.x, findMatch.y);
-            click(1000);
+            waitAndClick(1000);
             Thread.sleep(1000);
 
             robot.mouseMove(agreeFight.x, agreeFight.y);
-            click(5000);
+            waitAndClick(5000);
 
 
             int iterations = 0;
@@ -440,7 +440,7 @@ public class Bot {
                     Thread.sleep(5000);
                 }
                 robot.mouseMove(next.x, next.y);
-                click(300);
+                waitAndClick(300);
             }
 
             if (gold != 0) {
@@ -448,22 +448,8 @@ public class Bot {
             }
             decreaseZoom();
             robot.mouseMove(660, 580);
-            click(300);
+            waitAndClick(300);
             needRestart = !fullCamp();
-        }
-    }
-
-    private static void collectDarkElixir() throws InterruptedException {
-        ArrayList<Point> drills = new ArrayList<>();
-        drills.add(drill1);
-        drills.add(drill2);
-        drills.add(drill3);
-        for (Point drill : drills) {
-            checkDisconnectAndWait();
-            robot.mouseMove(drill.x, drill.y);
-            click(100);
-            robot.keyPress(KeyEvent.VK_ENTER);
-            robot.keyPress(KeyEvent.VK_ENTER);
         }
     }
 

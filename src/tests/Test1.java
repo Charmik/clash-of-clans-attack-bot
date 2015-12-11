@@ -16,11 +16,10 @@ import java.util.ArrayList;
 
 public class Test1 {
 
+    private static final String separator = Variables.separator;
     private static ArrayList<String> tests = new ArrayList<>();
     private static ArrayList<Integer> gold = new ArrayList<>();
     private static ArrayList<Integer> elixir = new ArrayList<>();
-
-    private static final String separator = Variables.separator;
 
     @Before
     public void init() throws AWTException, InterruptedException, IOException {
@@ -80,7 +79,7 @@ public class Test1 {
             int elixir_ = Bot.getElixir(image);
             int goldExpected = gold.get(i);
             int elixirExpected = elixir.get(i);
-            System.out.println("i=" + i);
+            System.out.println("i=" + i + " goldExpected=" + goldExpected);
             Assert.assertEquals("gold", goldExpected, gold_);
             Assert.assertEquals("elixir", elixirExpected, elixir_);
         }
@@ -88,19 +87,33 @@ public class Test1 {
 
     @Test
     public void testOneTest() throws AWTException, InterruptedException, IOException {
-        int k = 16;
-        for (int i = k; i < k + 1; i++) {
-            //System.out.println(gold.get(i) + elixir.get(i));
-            BufferedImage image = getImage(tests.get(i));
-            int gold_ = 300000;//Bot.getGold(image);
-            int elixir_ = 300000;//Bot.getElixir(image);
+        //System.out.println(gold.get(i) + elixir.get(i));
+        BufferedImage image = getImage(tests.get(0));
+        int gold_ = Bot.getGold(image);
+        int elixir_ = Bot.getElixir(image);
 
-            int goldExpected = gold.get(i);
-            int elixirExpected = elixir.get(i);
-            Bot.goodBase(goldExpected, image);
-            //Assert.assertEquals("gold", goldExpected, gold_);
-            //Assert.assertEquals("elixir", elixirExpected, elixir_);
-        }
+        int goldExpected = gold.get(0);
+        int elixirExpected = elixir.get(0);
+        //Bot.goodBase(goldExpected, image);
+        Assert.assertEquals("gold", goldExpected, gold_);
+        Assert.assertEquals("elixir", elixirExpected, elixir_);
+    }
+
+    @Test
+    public void testGold() throws IOException, AWTException {
+        BufferedImage image = getImage(tests.get(0));
+        int gold_ = Bot.getGold(image);
+        int goldExpected = gold.get(0);
+        Assert.assertEquals("gold", goldExpected, gold_);
+    }
+
+    @Test
+    public void testElixir() throws IOException, AWTException {
+        BufferedImage image = getImage(tests.get(0));
+        int elixir_ = Bot.getElixir(image);
+        int elixirExpected = elixir.get(0);
+        Assert.assertEquals("elixir", elixirExpected, elixir_);
+
     }
 
     @Test

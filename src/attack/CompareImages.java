@@ -65,6 +65,10 @@ public class CompareImages implements Runnable {
                         if ((x - point.x == 1) && digit == 1 && point1.digit == 5) {
                             break;
                         }
+                        if ((x - point.x == 2) && digit == 1 && point1.digit == 1) {
+                            flag = true;
+                            break;
+                        }
                         if (point.x == x || Math.abs(point.x - x) < 2) {
                             flag = true;
                             break;
@@ -86,6 +90,7 @@ public class CompareImages implements Runnable {
         if (lowestDiff < precise) {
             answer.add(new Point(10000, 10000));
         }
+        //System.out.println(lowestDiff + "    " + precise);
         return this;
     }
 
