@@ -5,27 +5,35 @@ import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 
-public class Main {
+class Main {
 
     public static void main(String[] args) throws IOException, AWTException, InterruptedException {
 
-        System.out.println("CORES=" + Runtime.getRuntime().availableProcessors());
-        
-        /*
-        Bot.init();
-        for(int i = 0; i < 1000; i++) {
-        	//System.out.println(Bot.fullCamp());
-        	//System.out.println(Bot.getGold(null) + "  "  + Bot.getElixir(null));
-	        //System.out.println(Bot.getElixir(null));
-	        Bot.collect();
+
+            /*
+        for (int i = 0; i < 100000;) {
+            //System.out.println(Bot.fullCamp());
+            //System.out.println(Bot.getGold(null) + "  "  + Bot.getElixir(null));
+            //System.out.println(Bot.getElixir(null));
+            //Bot.collect();
+            Bot.getTroops();
+            //BufferedImage image = Bot.get_screen();
+            //int gold = Bot.getGold(image);
+            //if (gold == 0) {
+            //    continue;
+            //}
+            //System.out.println(Bot.goodBase(gold, image, false));
+
+
         }
         */
-        
 
+
+        Robot robot = new Robot();
 
         Bot.run();
 
-        Bot.init();
+        //Bot.init();
         /*
         for (int i = 1; i < 100; i++) {
             Bot.fight();
@@ -35,7 +43,7 @@ public class Main {
         */
 
 
-        //Robot robot = new Robot();
+        //Bot.init();
         long sum = 0;
         int index = 0;
         BufferedImage screen = Bot.get_screen();
@@ -54,9 +62,6 @@ public class Main {
             index++;
             sum += t;
             System.out.println("index=" + index + " average=" + (sum / index));
-            if (1 == 2) {
-                break;
-            }
         }
     }
 }

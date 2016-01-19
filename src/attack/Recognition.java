@@ -10,9 +10,9 @@ import java.util.ArrayList;
 /**
  * Created by Charm on 14.06.14.
  */
-public class Recognition {
+class Recognition {
 
-    public static int getNumber(Point start, Point finish, String add, BufferedImage screen) throws IOException, AWTException {
+    public static int getNumber(Point start, Point finish, String add, BufferedImage screen) throws IOException {
         String path = new File(".").getCanonicalPath();
         ArrayList<Integer> digits = new ArrayList<>();
         ArrayList<Struct> answer = new ArrayList<>();
@@ -39,17 +39,22 @@ public class Recognition {
                 String addFrontToOne = "";
                 int cycle = 1;
                 if (digit == 1) {
-                    cycle = 6;
+                    cycle = 8; 
                 } else if (digit == 7) {
                     cycle = 3;
+                } else if (digit == 4) {
+                    cycle = 2;
+                } else if (digit == 8) {
+                    cycle = 2;
                 }
+
                 for (int j = 0; j < cycle; j++) {
-                    if ((digit == 1 || digit == 7) && j > 0) {
+                    if ((digit == 1 || digit == 7 || digit == 4 || digit == 8) && j > 0) {
                         addFrontToOne += "_";
                     }
                     BufferedImage image = ImageIO.read(new File(path + Variables.separator + addFrontToOne + digit + add + ".png"));
                     while (true) {
-                        ArrayList<Point> tmp;
+                        Point tmp;
                         float precise = 0.06f;
                         if (digit == 1) {
                             precise = 0.0139f;
@@ -64,12 +69,12 @@ public class Recognition {
                             precise = 0.08f;
                         }
                         tmp = new CompareImages(screen, image,
-                                start.x, start.y, finish.x, finish.y, answer, precise, digit).compare().getAnswer();
+                                start.x, start.y, finish.x, finish.y, answer, precise, digit).compare().result();
 
-                        if (tmp.size() == 1) {
+                        if (tmp == null) {
                             break;
                         }
-                        answer.add(new Struct(tmp.get(0), digit));
+                        answer.add(new Struct(tmp, digit));
                         digits.add(digit);
                     }
                 }
@@ -102,8 +107,8 @@ public class Recognition {
     }
 
     public static class Struct {
-        Point point;
-        int digit;
+        final Point point;
+        final int digit;
 
         Struct(Point point, int digit) {
             this.point = point;

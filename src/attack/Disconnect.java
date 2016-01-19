@@ -6,7 +6,7 @@ import java.util.ArrayList;
 /**
  * Created by Charm on 18/11/2015.
  */
-public class Disconnect implements Runnable {
+class Disconnect implements Runnable {
 
     @Override
     public void run() {
@@ -16,7 +16,7 @@ public class Disconnect implements Runnable {
                         Variables.disconnectStart.x, Variables.disconnectStart.y,
                         Variables.disconnectFinish.x, Variables.disconnectFinish.y, new ArrayList<>(), 0.1f);
                 ci.compare();
-                if (ci.getAnswer().size() == 2) {
+                if (ci.result() != null) {
                     System.out.println("DISCONNECT");
                     Variables.needToWait.set(true);
                     try {

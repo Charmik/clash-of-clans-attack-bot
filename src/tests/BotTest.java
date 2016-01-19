@@ -14,16 +14,16 @@ import java.io.IOException;
 import java.util.ArrayList;
 
 
-public class Test1 {
+public class BotTest {
 
     private static final String separator = Variables.separator;
-    private static ArrayList<String> tests = new ArrayList<>();
-    private static ArrayList<Integer> gold = new ArrayList<>();
-    private static ArrayList<Integer> elixir = new ArrayList<>();
+    private final static ArrayList<String> tests = new ArrayList<>();
+    private final static ArrayList<Integer> gold = new ArrayList<>();
+    private final static ArrayList<Integer> elixir = new ArrayList<>();
 
     @Before
     public void init() throws AWTException, InterruptedException, IOException {
-        Bot.init();
+        //Bot.init();
         try {
             String path = new File(".").getCanonicalPath();
             path += separator + "imagesForTests" + separator;
@@ -59,7 +59,7 @@ public class Test1 {
             path = new File(".").getCanonicalPath();
             path += separator + "imagesForTests" + separator + nameImage;
         } catch (IOException e) {
-            e.printStackTrace();
+            System.out.println("could read file" + nameImage);
         }
         try {
             assert path != null;
@@ -71,7 +71,7 @@ public class Test1 {
     }
 
     @Test
-    public void test() throws AWTException, InterruptedException, IOException {
+    public void testAllGoldAndElixir() throws AWTException, InterruptedException, IOException {
         for (int i = 0; i < tests.size(); i++) {
             System.out.println(gold.get(i) + elixir.get(i));
             BufferedImage image = getImage(tests.get(i));
@@ -120,21 +120,44 @@ public class Test1 {
     public void isGoodBase() throws AWTException, InterruptedException, IOException {
         int k = 0; //tests.size
         for (int i = k; i < tests.size(); i++) {
+            System.out.println("index=" + i);
             //System.out.println(gold.get(i) + elixir.get(i));
             BufferedImage image = getImage(tests.get(i));
 
             int goldExpected = gold.get(i);
             int elixirExpected = elixir.get(i);
 
+            System.out.println(goldExpected + " " + elixirExpected);
             boolean flag = Bot.goodBase(goldExpected, image);
             if (!flag) {
-                System.out.println(1);
-                //System.out.println("bad");
+                System.out.println("bad");
             } else {
-                System.out.println(2);
-                //System.out.println("good base!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
+                System.out.println("good base!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
             }
-            //Assert.assertEquals(flag, false);
+            Assert.assertEquals(flag, true);
+
+        }
+    }
+
+    @Test
+    public void isBadBase() throws AWTException, InterruptedException, IOException {
+        int k = 0; //tests.size
+        for (int i = k; i < tests.size(); i++) {
+            System.out.println("index=" + i);
+            //System.out.println(gold.get(i) + elixir.get(i));
+            BufferedImage image = getImage(tests.get(i));
+
+            int goldExpected = gold.get(i);
+            int elixirExpected = elixir.get(i);
+
+            System.out.println(goldExpected + " " + elixirExpected);
+            boolean flag = Bot.goodBase(goldExpected, image);
+            if (!flag) {
+                System.out.println("bad");
+            } else {
+                System.out.println("good base!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
+            }
+            Assert.assertEquals(flag, false);
 
         }
     }

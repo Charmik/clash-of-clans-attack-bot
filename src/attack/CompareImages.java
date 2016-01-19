@@ -19,9 +19,9 @@ public class CompareImages implements Runnable {
     private final int y2;
     private final ArrayList<Recognition.Struct> points;
     private final float precise;
-    private final ArrayList<Point> answer;
     private final double denominator;
     private final int digit;
+    private Point answer;
 
     CompareImages(BufferedImage image1, BufferedImage image2, int x1, int y1, int x2, int y2,
                   ArrayList<Recognition.Struct> points) {
@@ -43,7 +43,7 @@ public class CompareImages implements Runnable {
         this.y2 = y2;
         this.points = points;
         this.precise = precise;
-        answer = new ArrayList<>();
+        this.answer = null;
         denominator = D * (image2.getHeight() * image2.getWidth());
         preciseCompare = precise * denominator;
         this.digit = digit;
@@ -62,10 +62,10 @@ public class CompareImages implements Runnable {
                     boolean flag = false;
                     for (Recognition.Struct point1 : points) {
                         Point point = point1.point;
-                        if ((x - point.x == 1) && digit == 1 && point1.digit == 5) {
+                        if (Math.abs(x - point.x) == 1 && digit == 1 && point1.digit == 5) {
                             break;
                         }
-                        if ((x - point.x == 2) && digit == 1 && point1.digit == 1) {
+                        if (Math.abs(x - point.x) == 2 && digit == 1 && point1.digit == 1) {
                             flag = true;
                             break;
                         }
@@ -78,17 +78,20 @@ public class CompareImages implements Runnable {
                             break;
                         }
                     }
-                    if (flag)
+                    if (flag) {
                         continue;
+                    }
                     bestX = x;
                     bestY = y;
                     lowestDiff = comp;
                 }
             }
         }
-        answer.add(new Point(bestX, bestY));
+
         if (lowestDiff < precise) {
-            answer.add(new Point(10000, 10000));
+            answer = new Point(bestX, bestY);
+        } else {
+            answer = null;
         }
         //System.out.println(lowestDiff + "    " + precise);
         return this;
@@ -100,16 +103,20 @@ public class CompareImages implements Runnable {
             for (int y = 0; y < im1.getHeight(); y++) {
                 int rgb1 = im1.getRGB(x, y);
                 int rgb2 = im2.getRGB(x, y);
-                float r1 = ((rgb1 >> 16) & 0xFF);
-                float r2 = ((rgb2 >> 16) & 0xFF);
-                float g1 = ((rgb1 >> 8) & 0xFF);
-                float g2 = ((rgb2 >> 8) & 0xFF);
-                float b1 = (rgb1 & 0xFF);
-                float b2 = (rgb2 & 0xFF);
-                variation += Math.sqrt((((r1 - r2)) * ((r1 - r2)) +
-                        ((g1 - g2)) * ((g1 - g2)) + ((b1 - b2)) * ((b1 - b2))) / xx);
+                //TODO: inline
+                int r1 = ((rgb1 >> 16) & 0xFF);
+                int r2 = ((rgb2 >> 16) & 0xFF);
+                int g1 = ((rgb1 >> 8) & 0xFF);
+                int g2 = ((rgb2 >> 8) & 0xFF);
+                int b1 = (rgb1 & 0xFF);
+                int b2 = (rgb2 & 0xFF);
+                int q1 = r1 - r2;
+                int q2 = g1 - g2;
+                int q3 = b1 - b2;
+                variation += Math.sqrt((q1 * q1 +
+                        q2 * q2 + q3 * q3) / xx);
                 if (variation > preciseCompare) {
-                    return 100500;
+                    return 10050000;
                 }
             }
         }
@@ -117,7 +124,7 @@ public class CompareImages implements Runnable {
     }
 
 
-    public ArrayList<Point> getAnswer() {
+    public Point result() {
         return answer;
     }
 
