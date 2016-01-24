@@ -128,7 +128,7 @@ public class BotTest {
             int elixirExpected = elixir.get(i);
 
             System.out.println(goldExpected + " " + elixirExpected);
-            boolean flag = Bot.goodBase(goldExpected, image);
+            boolean flag = Bot.goodBase(goldExpected, image, true);
             if (!flag) {
                 System.out.println("bad");
             } else {
@@ -151,7 +151,7 @@ public class BotTest {
             int elixirExpected = elixir.get(i);
 
             System.out.println(goldExpected + " " + elixirExpected);
-            boolean flag = Bot.goodBase(goldExpected, image);
+            boolean flag = Bot.goodBase(goldExpected, image, true);
             if (!flag) {
                 System.out.println("bad");
             } else {

@@ -40,9 +40,13 @@ public class Bot {
             fullElixirStorage3 = ImageIO.read(new File(path + separator + "fullElixirStorage3.png"));
             fullElixirStorageBoost1 = ImageIO.read(new File(path + separator + "fullElixirStorageBoost1.png"));
             fullElixirStorageBoost2 = ImageIO.read(new File(path + separator + "fullElixirStorageBoost2.png"));
+            fullElixirStorageBoost3 = ImageIO.read(new File(path + separator + "fullElixirStorageBoost3.png"));
+            fullElixirStorageBoost4 = ImageIO.read(new File(path + separator + "fullElixirStorageBoost4.png"));
             emptyElixir = ImageIO.read(new File(path + separator + "emptyElixir.png"));
             emptyElixir2 = ImageIO.read(new File(path + separator + "emptyElixir2.png"));
             emptyElixir3 = ImageIO.read(new File(path + separator + "emptyElixir3.png"));
+            emptyElixir4 = ImageIO.read(new File(path + separator + "emptyElixir4.png"));
+            emptyElixir5 = ImageIO.read(new File(path + separator + "emptyElixir5.png"));
             fullCamp = ImageIO.read(new File(path + separator + "fullCamp.png"));
             goldCircle = ImageIO.read(new File(path + separator + "goldCircle.png"));
             barrack = ImageIO.read(new File(path + separator + "barrack.png"));
@@ -160,7 +164,7 @@ public class Bot {
     }
 
 
-    public static boolean goodBase(int gold, BufferedImage bf) throws AWTException, InterruptedException, IOException {
+    public static boolean goodBase(int gold, BufferedImage bf, boolean test) throws AWTException, InterruptedException, IOException {
         int localGold = 200000;
         int localElixir = 200000;
         if (gold < localGold && gold != -1) {
@@ -173,10 +177,14 @@ public class Bot {
 
         ArrayList<CompareImages> list = new ArrayList<>();
 
+
         list.add(new CompareImages(bf, Variables.fullElixirStorage3,
                 400, 100, 900, 500, new ArrayList<>(), 0.12f));
 
-        //TODO: emptyElixir2 + emptyElixir3 ?
+        list.add(new CompareImages(bf, Variables.emptyElixir2, //left
+                200, 200, 600, 600, new ArrayList<>(), 0.1f));
+        list.add(new CompareImages(bf, Variables.emptyElixir2, //top
+                300, 30, 900, 400, new ArrayList<>(), 0.1f));
         list.add(new CompareImages(bf, Variables.emptyElixir2, //right
                 700, 150, 1100, 600, new ArrayList<>(), 0.1f));
 
@@ -187,6 +195,21 @@ public class Bot {
         list.add(new CompareImages(bf, Variables.emptyElixir3, //right
                 700, 150, 1100, 600, new ArrayList<>(), 0.1f));
 
+        list.add(new CompareImages(bf, Variables.emptyElixir4, //left
+                200, 200, 600, 600, new ArrayList<>(), 0.1f));
+        list.add(new CompareImages(bf, Variables.emptyElixir4, //top
+                300, 30, 900, 400, new ArrayList<>(), 0.1f));
+        list.add(new CompareImages(bf, Variables.emptyElixir4, //right
+                700, 150, 1100, 600, new ArrayList<>(), 0.1f));
+
+
+        list.add(new CompareImages(bf, Variables.emptyElixir5, //left
+                200, 200, 600, 600, new ArrayList<>(), 0.1f));
+        list.add(new CompareImages(bf, Variables.emptyElixir5, //top
+                300, 30, 900, 400, new ArrayList<>(), 0.1f));
+        list.add(new CompareImages(bf, Variables.emptyElixir5, //right
+                700, 150, 1100, 600, new ArrayList<>(), 0.1f));
+        
         list.add(new CompareImages(bf, Variables.fullElixirStorageBoost1, //left
                 200, 200, 600, 600, new ArrayList<>(), 0.1f));
         list.add(new CompareImages(bf, Variables.fullElixirStorageBoost1, //top
@@ -201,8 +224,22 @@ public class Bot {
         list.add(new CompareImages(bf, Variables.fullElixirStorageBoost2, //right
                 700, 150, 1100, 600, new ArrayList<>(), 0.1f));
 
+        list.add(new CompareImages(bf, Variables.fullElixirStorageBoost3, //left
+                200, 200, 600, 600, new ArrayList<>(), 0.1f));
+        list.add(new CompareImages(bf, Variables.fullElixirStorageBoost3, //top
+                300, 30, 900, 400, new ArrayList<>(), 0.1f));
+        list.add(new CompareImages(bf, Variables.fullElixirStorageBoost3, //right
+                700, 150, 1100, 600, new ArrayList<>(), 0.1f));
+
+        list.add(new CompareImages(bf, Variables.fullElixirStorageBoost4, //left
+                200, 200, 600, 600, new ArrayList<>(), 0.1f));
+        list.add(new CompareImages(bf, Variables.fullElixirStorageBoost4, //top
+                300, 30, 900, 400, new ArrayList<>(), 0.1f));
+        list.add(new CompareImages(bf, Variables.fullElixirStorageBoost4, //right
+                700, 150, 1100, 600, new ArrayList<>(), 0.1f));
+
         ThreadPoolExecutor threadPoolExecutor = new ThreadPoolExecutor(Runtime.getRuntime().availableProcessors()
-                , 25, 25, TimeUnit.SECONDS, new ArrayBlockingQueue<>(16));
+                , 25, 25, TimeUnit.SECONDS, new ArrayBlockingQueue<>(25));
         list.forEach(threadPoolExecutor::execute);
         threadPoolExecutor.shutdown();
 
@@ -222,12 +259,16 @@ public class Bot {
         for (int i = 0; i < list.size(); i++) {
             CompareImages e = list.get(i);
             if (e.result() != null) {
+                //if (!test) {
                 System.out.println("bad base because of " + i);
+                //}
                 return false;
             }
         }
-        System.out.println("SAVE THE BASE");
-        saveImage(gold, elixir);
+        if (!test) {
+            System.out.println("SAVE THE BASE");
+            saveImage(gold, elixir);
+        }
         //System.out.println();
         //System.out.println(gold + " " + elixir);
         return true;
@@ -344,6 +385,7 @@ public class Bot {
 
     public static void run() throws AWTException, IOException, InterruptedException {
         while (true) {
+            restartWifi();
             restart();
             decreaseZoom();
             cameraToUp();
@@ -434,7 +476,7 @@ public class Bot {
                 if (gold == 0) {
                     break;
                 }
-                if (goodBase(gold, null)) {
+                if (goodBase(gold, null, false)) {
                     break;
                 }
                 if (prevGold == gold) {
@@ -451,6 +493,16 @@ public class Bot {
                 System.out.println("iterations=" + iterations);
                 fight();
             }
+        }
+    }
+
+    private static void restartWifi() {
+        Runtime runtime = Runtime.getRuntime();
+        try {
+            runtime.exec(new String[]{"cmd.exe", "/c", "netsh interface set interface \"Wireless Network Connection\" disable"});
+            runtime.exec(new String[]{"cmd.exe", "/c", "netsh interface set interface \"Wireless Network Connection\" enable"});
+        } catch (IOException e) {
+            System.out.println("can't restartWifi" + e.getMessage());
         }
     }
 

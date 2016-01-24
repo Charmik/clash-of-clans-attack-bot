@@ -8,9 +8,8 @@ import java.io.IOException;
 class Main {
 
     public static void main(String[] args) throws IOException, AWTException, InterruptedException {
-
-
-            /*
+        Robot robot = new Robot();
+        /*
         for (int i = 0; i < 100000;) {
             //System.out.println(Bot.fullCamp());
             //System.out.println(Bot.getGold(null) + "  "  + Bot.getElixir(null));
@@ -23,13 +22,8 @@ class Main {
             //    continue;
             //}
             //System.out.println(Bot.goodBase(gold, image, false));
-
-
         }
         */
-
-
-        Robot robot = new Robot();
 
         Bot.run();
 
@@ -42,14 +36,12 @@ class Main {
         }
         */
 
-
-        //Bot.init();
         long sum = 0;
         int index = 0;
         BufferedImage screen = Bot.get_screen();
         for (; ; ) {
             long t = System.currentTimeMillis();
-            if (Bot.goodBase(-1, screen)) {
+            if (Bot.goodBase(-1, screen, true)) {
                 System.out.println("good");
                 //robot.mouseMove(500, 500);
             } else {
@@ -58,7 +50,6 @@ class Main {
             }
             //Bot.collect();
             t = System.currentTimeMillis() - t;
-
             index++;
             sum += t;
             System.out.println("index=" + index + " average=" + (sum / index));

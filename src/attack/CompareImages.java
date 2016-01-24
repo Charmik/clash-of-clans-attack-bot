@@ -87,12 +87,7 @@ public class CompareImages implements Runnable {
                 }
             }
         }
-
-        if (lowestDiff < precise) {
-            answer = new Point(bestX, bestY);
-        } else {
-            answer = null;
-        }
+        answer = lowestDiff < precise ? new Point(bestX, bestY) : null;
         //System.out.println(lowestDiff + "    " + precise);
         return this;
     }
