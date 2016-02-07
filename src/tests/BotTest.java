@@ -73,14 +73,16 @@ public class BotTest {
     @Test
     public void testAllGoldAndElixir() throws AWTException, InterruptedException, IOException {
         for (int i = 0; i < tests.size(); i++) {
-            System.out.println(gold.get(i) + elixir.get(i));
+            System.out.println(i + " size=" + tests.size());
+            //System.out.println(gold.get(i) + elixir.get(i));
             BufferedImage image = getImage(tests.get(i));
             int gold_ = Bot.getGold(image);
-            int elixir_ = Bot.getElixir(image);
             int goldExpected = gold.get(i);
-            int elixirExpected = elixir.get(i);
             System.out.println("i=" + i + " goldExpected=" + goldExpected);
             Assert.assertEquals("gold", goldExpected, gold_);
+
+            int elixir_ = Bot.getElixir(image);
+            int elixirExpected = elixir.get(i);
             Assert.assertEquals("elixir", elixirExpected, elixir_);
         }
     }
@@ -151,7 +153,7 @@ public class BotTest {
             int elixirExpected = elixir.get(i);
 
             System.out.println(goldExpected + " " + elixirExpected);
-            boolean flag = Bot.goodBase(goldExpected, image, true);
+            boolean flag = Bot.goodBase(goldExpected, image, false);
             if (!flag) {
                 System.out.println("bad");
             } else {

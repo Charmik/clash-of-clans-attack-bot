@@ -2,7 +2,6 @@ package tests;
 
 import attack.Bot;
 import attack.Variables;
-import org.jetbrains.annotations.Nullable;
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -22,7 +21,7 @@ public class PartTests {
     private final static ArrayList<Integer> gold = new ArrayList<>();
     private final static ArrayList<Integer> elixir = new ArrayList<>();
 
-    public void init(@Nullable String suffix) throws AWTException, InterruptedException, IOException {
+    public void init(String suffix) throws AWTException, InterruptedException, IOException {
         try {
             String path = new File(".").getCanonicalPath();
             path += separator + "imagesForTests" + separator;
@@ -55,7 +54,7 @@ public class PartTests {
         }
     }
 
-    public BufferedImage getImage(@Nullable String suffix, String nameImage) {
+    public BufferedImage getImage(String suffix, String nameImage) {
         String path = null;
         try {
             path = new File(".").getCanonicalPath();
@@ -80,7 +79,7 @@ public class PartTests {
     public void testBadBases() throws AWTException, InterruptedException, IOException {
         String folder = "badBase";
         init(folder);
-        int k = 62;
+        int k = 0;
         for (int i = k; i < tests.size(); i++) {
             System.out.println("index=" + i);
             //System.out.println(gold.get(i) + elixir.get(i));

@@ -13,34 +13,30 @@ public class CompareImages implements Runnable {
     private final double preciseCompare;
     private final BufferedImage image1;
     private final BufferedImage image2;
-    private final int x1;
-    private final int y1;
-    private final int x2;
-    private final int y2;
+    private final Point start;
+    private final Point finish;
     private final ArrayList<Recognition.Struct> points;
     private final float precise;
     private final double denominator;
     private final int digit;
     private Point answer;
 
-    CompareImages(BufferedImage image1, BufferedImage image2, int x1, int y1, int x2, int y2,
+    CompareImages(BufferedImage image1, BufferedImage image2, Point start, Point finish,
                   ArrayList<Recognition.Struct> points) {
-        this(image1, image2, x1, y1, x2, y2, points, 0.06f, -1);
+        this(image1, image2, start, finish, points, 0.06f, -1);
     }
 
-    CompareImages(BufferedImage image1, BufferedImage image2, int x1, int y1, int x2, int y2,
+    CompareImages(BufferedImage image1, BufferedImage image2, Point start, Point finish,
                   ArrayList<Recognition.Struct> points, float precise) {
-        this(image1, image2, x1, y1, x2, y2, points, precise, -1);
+        this(image1, image2, start, finish, points, precise, -1);
     }
 
-    CompareImages(BufferedImage image1, BufferedImage image2, int x1, int y1, int x2, int y2,
+    CompareImages(BufferedImage image1, BufferedImage image2, Point start, Point finish,
                   ArrayList<Recognition.Struct> points, float precise, int digit) {
         this.image1 = image1;
         this.image2 = image2;
-        this.x1 = x1;
-        this.y1 = y1;
-        this.x2 = x2;
-        this.y2 = y2;
+        this.start = start;
+        this.finish = finish;
         this.points = points;
         this.precise = precise;
         this.answer = null;
@@ -55,8 +51,8 @@ public class CompareImages implements Runnable {
         int bestX = 0;
         int bestY = 0;
         double lowestDiff = 10050000;
-        for (int x = x1; x < x2; x++) {
-            for (int y = y1; y < y2 - h2; y++) {
+        for (int x = start.x; x < finish.x; x++) {
+            for (int y = start.y; y < finish.y - h2; y++) {
                 double comp = compareImages(image1.getSubimage(x, y, w2, h2), image2);
                 if (comp < lowestDiff) {
                     boolean flag = false;
@@ -66,6 +62,18 @@ public class CompareImages implements Runnable {
                             break;
                         }
                         if (Math.abs(x - point.x) == 2 && digit == 1 && point1.digit == 1) {
+                            flag = true;
+                            break;
+                        }
+                        if (Math.abs(x - point.x) == 3 && digit == 7 && point1.digit == 2) {
+                            flag = true;
+                            break;
+                        }
+                        if (Math.abs(x - point.x) == 2 && digit == 7 && point1.digit == 7) {
+                            flag = true;
+                            break;
+                        }
+                        if (Math.abs(x - point.x) == 3 && digit == 7 && point1.digit == 5) {
                             flag = true;
                             break;
                         }
@@ -87,6 +95,7 @@ public class CompareImages implements Runnable {
                 }
             }
         }
+        //int kk = digit;
         answer = lowestDiff < precise ? new Point(bestX, bestY) : null;
         //System.out.println(lowestDiff + "    " + precise);
         return this;

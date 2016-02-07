@@ -10,48 +10,21 @@ import java.util.concurrent.atomic.AtomicBoolean;
 public class Variables {
 
     public static final String separator;
-    static final Point attackButton = new Point(140, 630);
-    static final Point findMatch = new Point(300, 520);
-    static final Point next = new Point(1170, 520);
-    //static final Point exitBattle = new Point(670, 570);
+    public static final Point attackButton = new Point(140, 660);
+    static final Point findMatch = new Point(320, 600);
+    static final Point next = new Point(1170, 580);
     static final Point firstBarrackStart = new Point(275, 75);
     static final Point firstBarrackFinish = new Point(600, 570);
-    static final Point buttonTrainTroops = new Point(810, 605);
-    static final Point archersInBarrack = new Point(560, 350);
-    //static final Point warInBarrack = new Point(450, 350);
-    //static final Point goblinInBarrack = new Point(810, 350);
-    static final Point nextInBarrack = new Point(1050, 350);
-    /*static Point reload = new Point(590, 520);
-static Point attack = new Point(70, 750); //comp
-static Point findMatch = new Point(170, 650); //comp
-static Point next = new Point(1200, 650);
-static Point exitBattle = new Point(620, 700);
-static Point firstBarrack = new Point(820, 160);
-static Point buttonTrainTroops = new Point(820, 760);
-static Point archersInBarrack = new Point(520, 460);
-static Point nextInBarrack = new Point(1000, 500);
-static Point drill = new Point(1120, 520);
-static Point agreeFight = new Point(700, 550);
-static Point barTroopsStart = new Point(300, 690);
-static Point barTroopsEnd = new Point(450, 770);
-static Point startGold = new Point(43,213);
-static Point endGold = new Point(140,240);
-static Point startElixir = new Point(45,240);
-static Point endElixir = new Point(140,265);
-static Point t1 = new Point(500, 165);
-static Point t2 = new Point(880, 170);
-static Point t3 = new Point(1200, 470);
-static Point t4 = new Point(910, 670);
-static Point t5 = new Point(400, 670);
-static Point t6 = new Point(150, 470);
-*/
+    static final Point buttonTrainTroops = new Point(850, 650);
+    static final Point archersInBarrack = new Point(534, 385);
+    static final Point nextInBarrack = new Point(1170, 360);
     static final Point agreeFight = new Point(776, 424);
     static final Point barTroopsStart = new Point(250, 580);
-    static final Point barTroopsEnd = new Point(600, 677);
-    static final Point startGold = new Point(105, 70); // for real
-    static final Point endGold = new Point(225, 95);
-    static final Point startElixir = new Point(100, 102);
-    static final Point endElixir = new Point(225, 127);
+    static final Point barTroopsEnd = new Point(600, 730);
+    static final Point startGold = new Point(70, 20); // for real
+    static final Point endGold = new Point(300, 150);
+    static final Point startElixir = new Point(123,112);
+    static final Point endElixir = new Point(230,135);
     static final Point t1 = new Point(544, 6);
     static final Point t2 = new Point(800, 3);
     static final Point t3 = new Point(1270, 372);
@@ -71,8 +44,10 @@ static Point t6 = new Point(150, 470);
     static final Point closeBarrack = new Point(1015, 111);
     static final Point clanCastleFightStart = new Point(311, 600);
     static final Point clanCastleFightFinish = new Point(488, 717);
-    static final Point clanCastleBuildingStart = new Point(930, 1);
-    static final Point clanCastleBuildingFinish = new Point(1171, 484);
+    static final Point clanCastleBuildingStart = new Point(800, 300);
+    static final Point clanCastleBuildingFinish = new Point(1171, 500);
+    static final Point cartStart = new Point(0,0);
+    static final Point cartFinish = new Point(1220, 650);
     static final int countDecreaseZoom = 10;
     static final int trainTroops = 75;
     static final long sleepAfterDisconnect = 60000;
@@ -95,6 +70,7 @@ static Point t6 = new Point(150, 470);
     static BufferedImage clanCastle;
     static BufferedImage clanCastleFight;
     static BufferedImage disconnect;
+    static BufferedImage cart;
     static AtomicBoolean needToWait;
 
     static {

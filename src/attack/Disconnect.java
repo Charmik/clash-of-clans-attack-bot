@@ -13,8 +13,7 @@ class Disconnect implements Runnable {
         while (true) {
             try {
                 CompareImages ci = new CompareImages(Bot.get_screen(), Variables.disconnect,
-                        Variables.disconnectStart.x, Variables.disconnectStart.y,
-                        Variables.disconnectFinish.x, Variables.disconnectFinish.y, new ArrayList<>(), 0.1f);
+                        Variables.disconnectStart, Variables.disconnectFinish, new ArrayList<>(), 0.1f);
                 ci.compare();
                 if (ci.result() != null) {
                     System.out.println("DISCONNECT");

@@ -57,19 +57,22 @@ class Recognition {
                         Point tmp;
                         float precise = 0.06f;
                         if (digit == 1) {
-                            precise = 0.0139f;
+                            //precise = 0.0139f;
+                            precise = 0.03f;
                         }
                         if (digit == 2) {
-                            precise = 0.065f;
+                            precise = 0.08f;
                         } else if (digit == 4) {
-                            precise = 0.086f;
+                            precise = 0.07f;
                         } else if (digit == 8) {
                             precise = 0.07f;
-                        } else if (digit == 0 || digit == 7 || digit == 5 || digit == 3) {
+                        } else if (digit == 7) {
+                            precise = 0.07f;
+                        } else if (digit == 0 || digit == 5 || digit == 3) {
                             precise = 0.08f;
                         }
                         tmp = new CompareImages(screen, image,
-                                start.x, start.y, finish.x, finish.y, answer, precise, digit).compare().result();
+                                start,finish, answer, precise, digit).compare().result();
 
                         if (tmp == null) {
                             break;
