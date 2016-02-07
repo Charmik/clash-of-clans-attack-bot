@@ -20,15 +20,6 @@ import static attack.Variables.*;
  */
 public class Bot {
 
-    static Point startLeft = new Point(200, 200);
-    static Point finishLeft = new Point(600, 600);
-
-    static Point startTop = new Point(300, 30);
-    static Point finishTop = new Point(900, 400);
-
-    static Point startRight = new Point(700, 150);
-    static Point finishRight = new Point(1100, 600);
-
     static {
         System.out.println("CORES=" + Runtime.getRuntime().availableProcessors());
         String path = null;
@@ -77,7 +68,7 @@ public class Bot {
         robot.mouseMove(379, 30);
         waitAndClick(100);
         CompareImages ci = new CompareImages(get_screen(), Variables.barrack,
-                firstBarrackStart, firstBarrackFinish, new ArrayList<>(), 0.1f);
+                firstBarrackStart.x, firstBarrackStart.y, firstBarrackFinish.x, firstBarrackFinish.y, new ArrayList<>(), 0.1f);
         ci.compare();
 
         if (ci.result() == null) {
@@ -123,15 +114,16 @@ public class Bot {
         heroes.add(queen);
         ArrayList<Point> coordinatesHeroes = new ArrayList<>();
         for (int i = 0; i < 2; i++) {
-            Point point = new CompareImages(get_screen(), heroes.get(i), barTroopsStart,
-                    barTroopsEnd, new ArrayList<>(), 0.07f).compare().result();
+            Point point = new CompareImages(get_screen(), heroes.get(i), barTroopsStart.x, barTroopsStart.y,
+                    barTroopsEnd.x, barTroopsEnd.y, new ArrayList<>(), 0.07f).compare().result();
             if (point != null) {
                 coordinatesHeroes.add(point);
             }
         }
 
         CompareImages ci = new CompareImages(get_screen(), Variables.clanCastleFight,
-                clanCastleFightStart, clanCastleFightFinish, new ArrayList<>(), 0.7f);
+                clanCastleFightStart.x, clanCastleFightStart.y,
+                clanCastleFightFinish.x, clanCastleFightFinish.y, new ArrayList<>(), 0.7f);
         ci.compare();
         Point clanCastleCoordinates = ci.result();
 
@@ -172,17 +164,6 @@ public class Bot {
         }
     }
 
-    private static void addCommonElixir(ArrayList<CompareImages> list,
-                                        BufferedImage bigImage, BufferedImage smallImage) {
-        list.add(new CompareImages(bigImage, smallImage, //left
-                startLeft, finishLeft, new ArrayList<>(), 0.1f));
-        list.add(new CompareImages(bigImage, smallImage, //top
-                startTop, finishTop, new ArrayList<>(), 0.1f));
-        list.add(new CompareImages(bigImage, smallImage, //right
-                startRight, finishRight, new ArrayList<>(), 0.1f));
-
-    }
-
 
     public static boolean goodBase(int gold, BufferedImage bf, boolean test) throws AWTException, InterruptedException, IOException {
         int localGold = 200000;
@@ -199,13 +180,68 @@ public class Bot {
 
         ArrayList<CompareImages> list = new ArrayList<>();
 
-        list.add(new CompareImages(bf, Variables.fullElixirStorage3,
-                new Point(400, 100), new Point(900, 500), new ArrayList<>(), 0.12f));
 
-        addCommonElixir(list,bf,Variables.emptyElixir2);
-        addCommonElixir(list,bf,Variables.emptyElixir3);
-        addCommonElixir(list,bf,Variables.emptyElixir4);
-        addCommonElixir(list,bf,Variables.emptyElixir5);
+        list.add(new CompareImages(bf, Variables.fullElixirStorage3,
+                400, 100, 900, 500, new ArrayList<>(), 0.12f));
+
+        list.add(new CompareImages(bf, Variables.emptyElixir2, //left
+                200, 200, 600, 600, new ArrayList<>(), 0.1f));
+        list.add(new CompareImages(bf, Variables.emptyElixir2, //top
+                300, 30, 900, 400, new ArrayList<>(), 0.1f));
+        list.add(new CompareImages(bf, Variables.emptyElixir2, //right
+                700, 150, 1100, 600, new ArrayList<>(), 0.1f));
+
+        list.add(new CompareImages(bf, Variables.emptyElixir3, //left
+                200, 200, 600, 600, new ArrayList<>(), 0.1f));
+        list.add(new CompareImages(bf, Variables.emptyElixir3, //top
+                300, 30, 900, 400, new ArrayList<>(), 0.1f));
+        list.add(new CompareImages(bf, Variables.emptyElixir3, //right
+                700, 150, 1100, 600, new ArrayList<>(), 0.1f));
+
+        list.add(new CompareImages(bf, Variables.emptyElixir4, //left
+                200, 200, 600, 600, new ArrayList<>(), 0.1f));
+        list.add(new CompareImages(bf, Variables.emptyElixir4, //top
+                300, 30, 900, 400, new ArrayList<>(), 0.1f));
+        list.add(new CompareImages(bf, Variables.emptyElixir4, //right
+                700, 150, 1100, 600, new ArrayList<>(), 0.1f));
+
+
+        list.add(new CompareImages(bf, Variables.emptyElixir5, //left
+                200, 200, 600, 600, new ArrayList<>(), 0.1f));
+        list.add(new CompareImages(bf, Variables.emptyElixir5, //top
+                300, 30, 900, 400, new ArrayList<>(), 0.1f));
+        list.add(new CompareImages(bf, Variables.emptyElixir5, //right
+                700, 150, 1100, 600, new ArrayList<>(), 0.1f));
+
+        /*
+        list.add(new CompareImages(bf, Variables.fullElixirStorageBoost1, //left
+                200, 200, 600, 600, new ArrayList<>(), 0.1f));
+        list.add(new CompareImages(bf, Variables.fullElixirStorageBoost1, //top
+                300, 30, 900, 400, new ArrayList<>(), 0.1f));
+        list.add(new CompareImages(bf, Variables.fullElixirStorageBoost1, //right
+                700, 150, 1100, 600, new ArrayList<>(), 0.1f));
+
+        list.add(new CompareImages(bf, Variables.fullElixirStorageBoost2, //left
+                200, 200, 600, 600, new ArrayList<>(), 0.1f));
+        list.add(new CompareImages(bf, Variables.fullElixirStorageBoost2, //top
+                300, 30, 900, 400, new ArrayList<>(), 0.1f));
+        list.add(new CompareImages(bf, Variables.fullElixirStorageBoost2, //right
+                700, 150, 1100, 600, new ArrayList<>(), 0.1f));
+
+        list.add(new CompareImages(bf, Variables.fullElixirStorageBoost3, //left
+                200, 200, 600, 600, new ArrayList<>(), 0.1f));
+        list.add(new CompareImages(bf, Variables.fullElixirStorageBoost3, //top
+                300, 30, 900, 400, new ArrayList<>(), 0.1f));
+        list.add(new CompareImages(bf, Variables.fullElixirStorageBoost3, //right
+                700, 150, 1100, 600, new ArrayList<>(), 0.1f));
+
+        list.add(new CompareImages(bf, Variables.fullElixirStorageBoost4, //left
+                200, 200, 600, 600, new ArrayList<>(), 0.1f));
+        list.add(new CompareImages(bf, Variables.fullElixirStorageBoost4, //top
+                300, 30, 900, 400, new ArrayList<>(), 0.1f));
+        list.add(new CompareImages(bf, Variables.fullElixirStorageBoost4, //right
+                700, 150, 1100, 600, new ArrayList<>(), 0.1f));
+        */
 
         ThreadPoolExecutor threadPoolExecutor = new ThreadPoolExecutor(Runtime.getRuntime().availableProcessors()
                 , 25, 25, TimeUnit.SECONDS, new ArrayBlockingQueue<>(25));
@@ -246,7 +282,7 @@ public class Bot {
 
     public static boolean fullCamp() throws AWTException {
         CompareImages ci = new CompareImages(get_screen(), Variables.fullCamp,
-                startCamp, endCamp, new ArrayList<>(), 0.1f);
+                startCamp.x, startCamp.y, endCamp.x, endCamp.y, new ArrayList<>(), 0.1f);
         ci.compare();
         return ci.result() != null;
     }
@@ -267,7 +303,7 @@ public class Bot {
     public static void collect() throws AWTException, InterruptedException {
         BufferedImage bf = get_screen();
         CompareImages ci = new CompareImages(bf, Variables.goldCircle,
-                collectStart, collectFinish, new ArrayList<>(), 0.7f);
+                collectStart.x, collectStart.y, collectFinish.x, collectFinish.y, new ArrayList<>(), 0.7f);
         ci.compare();
         if (ci.result() != null) {
             Point point = ci.result();
@@ -279,7 +315,7 @@ public class Bot {
     public static void fetchCart() throws AWTException, InterruptedException {
         BufferedImage bf = get_screen();
         CompareImages ci = new CompareImages(bf, Variables.cart,
-                cartStart, cartFinish, new ArrayList<>(), 0.3f);
+                cartStart.x, cartStart.y, cartFinish.x, cartFinish.y, new ArrayList<>(), 0.3f);
         ci.compare();
         if (ci.result() != null) {
             Point point = ci.result();
@@ -348,8 +384,8 @@ public class Bot {
         waitAndClick(500);
         BufferedImage bf = get_screen();
         CompareImages ci = new CompareImages(bf, Variables.clanCastle,
-                clanCastleBuildingStart,
-                clanCastleBuildingFinish, new ArrayList<>(), 0.3f);
+                clanCastleBuildingStart.x, clanCastleBuildingStart.y,
+                clanCastleBuildingFinish.x, clanCastleBuildingFinish.y, new ArrayList<>(), 0.3f);
         ci.compare();
         if (ci.result() != null) {
             Point point = ci.result();
@@ -463,8 +499,8 @@ public class Bot {
                 if (goodBase(gold, null, false)) {
                     break;
                 }
-                int elixir = getElixir(null);
-                saveImage(gold, elixir);
+                //int elixir = getElixir(null);
+                //saveImage(gold, elixir);
 
                 if (prevGold == gold) {
                     break;
