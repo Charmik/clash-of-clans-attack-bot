@@ -13,7 +13,7 @@ class Main {
     public static void main(String[] args) throws IOException, AWTException, InterruptedException {
         Robot robot = new Robot();
 
-	    
+        
         //for (int i = 0; i < 100;){
         	//Bot.getArchers();
             //System.out.println(Bot.fullCamp());
