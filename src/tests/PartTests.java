@@ -17,11 +17,14 @@ import java.util.ArrayList;
  */
 public class PartTests {
     private static final String separator = Variables.separator;
-    private final static ArrayList<String> tests = new ArrayList<>();
-    private final static ArrayList<Integer> gold = new ArrayList<>();
-    private final static ArrayList<Integer> elixir = new ArrayList<>();
+    private static ArrayList<String> tests;
+    private static ArrayList<Integer> gold;
+    private static ArrayList<Integer> elixir;
 
     public void init(String suffix) throws AWTException, InterruptedException, IOException {
+        tests = new ArrayList<>();
+        gold = new ArrayList<>();
+        elixir = new ArrayList<>();
         try {
             String path = new File(".").getCanonicalPath();
             path += separator + "imagesForTests" + separator;
@@ -115,7 +118,7 @@ public class PartTests {
         }
     }
 
-    @Test
+    //@Test
     public void countGoodBases() throws AWTException, InterruptedException, IOException {
         String folder = null;
         init(folder);
@@ -140,7 +143,7 @@ public class PartTests {
         System.out.println("goodBases=" + countGoodBases + " size=" + tests.size());
     }
 
-    @Test
+    //@Test
     public void countBadBases() throws AWTException, InterruptedException, IOException {
         String folder = null;
         init(folder);

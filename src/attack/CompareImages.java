@@ -81,7 +81,7 @@ public class CompareImages implements Runnable {
                             flag = true;
                             break;
                         }
-                        if ((x - point.x == 3 || x - point.x == 4 || x - point.x == 5) && digit == 1 && point1.digit == 4) {
+                        if (digit == 1 && point1.digit == 4 && (x - point.x == 3 || x - point.x == 4 || x - point.x == 5)) {
                             flag = true;
                             break;
                         }

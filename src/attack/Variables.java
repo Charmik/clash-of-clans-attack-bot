@@ -54,6 +54,7 @@ public class Variables {
     static Robot robot;
     static BufferedImage king;
     static BufferedImage queen;
+    static BufferedImage warden;
     static BufferedImage fullElixirStorage3;
     static BufferedImage fullElixirStorageBoost1;
     static BufferedImage fullElixirStorageBoost2;
@@ -64,6 +65,7 @@ public class Variables {
     static BufferedImage emptyElixir3;
     static BufferedImage emptyElixir4;
     static BufferedImage emptyElixir5;
+    static BufferedImage emptyElixir6;
     static BufferedImage fullCamp;
     static BufferedImage goldCircle;
     static BufferedImage barrack;
