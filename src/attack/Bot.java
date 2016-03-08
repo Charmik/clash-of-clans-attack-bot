@@ -48,7 +48,7 @@ public class Bot {
         try {
             queen = ImageIO.read(new File(path + separator + "queen.png"));
             king = ImageIO.read(new File(path + separator + "king.png"));
-            //warden = ImageIO.read(new File(path + separator + "warden.png"));
+            warden = ImageIO.read(new File(path + separator + "warden.png"));
             fullElixirStorage3 = ImageIO.read(new File(path + separator + "fullElixirStorage3.png"));
             fullElixirStorageBoost1 = ImageIO.read(new File(path + separator + "fullElixirStorageBoost1.png"));
             fullElixirStorageBoost2 = ImageIO.read(new File(path + separator + "fullElixirStorageBoost2.png"));
@@ -60,6 +60,7 @@ public class Bot {
             emptyElixir4 = ImageIO.read(new File(path + separator + "emptyElixir4.png"));
             emptyElixir5 = ImageIO.read(new File(path + separator + "emptyElixir5.png"));
             emptyElixir6 = ImageIO.read(new File(path + separator + "emptyElixir6.png"));
+            emptyElixir7 = ImageIO.read(new File(path + separator + "emptyElixir7.png"));
             fullCamp = ImageIO.read(new File(path + separator + "fullCamp.png"));
             goldCircle = ImageIO.read(new File(path + separator + "goldCircle.png"));
             barrack = ImageIO.read(new File(path + separator + "barrack.png"));
@@ -71,7 +72,7 @@ public class Bot {
             heroes = new ArrayList<>();
             heroes.add(king);
             heroes.add(queen);
-            //heroes.add(warden);
+            heroes.add(warden);
 
         } catch (IOException e) {
 
@@ -129,7 +130,7 @@ public class Bot {
 
     public static void fight() throws InterruptedException, AWTException {
         ArrayList<Point> coordinatesHeroes = new ArrayList<>();
-        for (int i = 0; i < 2; i++) {
+        for (int i = 0; i < 3; i++) {
             Point point = new CompareImages(get_screen(), heroes.get(i), barTroopsStart,
                     barTroopsEnd, new ArrayList<>(), 0.07f).compare().result();
             if (point != null) {
@@ -171,13 +172,16 @@ public class Bot {
             pushTroops(t1, t2, 3);
         }
         if (coordinatesHeroes.size() != 0) {
-            Thread.sleep(13000);
+            Thread.sleep(15000);
         }
 
         for (int i = 0; i < coordinatesHeroes.size(); i++) {
             Thread.sleep(100);
             if (i == 1) {
                 Thread.sleep(12000);
+            }
+            if (i == 2) {
+                Thread.sleep(1000);
             }
             robot.mouseMove(coordinatesHeroes.get(i).x, coordinatesHeroes.get(i).y);
             waitAndClick(100);
@@ -210,13 +214,14 @@ public class Bot {
 
         ArrayList<CompareImages> list = new ArrayList<>();
 
-        list.add(new CompareImages(bf, Variables.fullElixirStorage3,
-                new Point(400, 100), new Point(900, 500), new ArrayList<>(), 0.12f));
+        //list.add(new CompareImages(bf, Variables.fullElixirStorage3,
+        //        new Point(400, 100), new Point(900, 500), new ArrayList<>(), 0.12f));
         addCommonElixir(list, bf, Variables.emptyElixir2);
         addCommonElixir(list, bf, Variables.emptyElixir3);
         addCommonElixir(list, bf, Variables.emptyElixir4);
         //addCommonElixir(list, bf, Variables.emptyElixir5);
         //addCommonElixir(list, bf, Variables.emptyElixir6);
+        addCommonElixir(list, bf, Variables.emptyElixir7);
 
         ThreadPoolExecutor threadPoolExecutor = new ThreadPoolExecutor(Runtime.getRuntime().availableProcessors()
                 , 25, 25, TimeUnit.SECONDS, new ArrayBlockingQueue<>(25));
@@ -247,7 +252,7 @@ public class Bot {
         }
         if (!test) {
             System.out.println("SAVE THE BASE");
-            //saveImage(gold, elixir);
+            saveImage(gold, elixir);
         }
         //System.out.println();
         //System.out.println(gold + " " + elixir);
@@ -447,7 +452,7 @@ public class Bot {
                 robot.keyPress(KeyEvent.VK_ENTER);
                 gold = 0;
                 iterations++;
-                if (iterations == 500) {
+                if (iterations == 100) {
                     break;
                 }
 

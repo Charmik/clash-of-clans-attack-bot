@@ -161,6 +161,11 @@ public class BotTest {
             boolean flag = Bot.goodBase(goldExpected, image, false);
             if (!flag) {
                 //System.out.println("bad");
+                Path pathSource = FileSystems.getDefault().getPath(new File(".").getCanonicalPath() +
+                                separator + "imagesForTests" + separator + tests.get(i));
+                Path pathDestination = FileSystems.getDefault().getPath(new File(".").getCanonicalPath() +
+                        separator + "imagesForTests" + separator + "badBase" + separator + tests.get(i));
+                Files.move(pathSource,pathDestination, StandardCopyOption.REPLACE_EXISTING);
             } else {
                 System.out.println("good base!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
                 Path pathSource =
