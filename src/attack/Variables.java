@@ -67,6 +67,7 @@ public class Variables {
     static BufferedImage emptyElixir5;
     static BufferedImage emptyElixir6;
     static BufferedImage emptyElixir7;
+    static BufferedImage emptyElixir8;
     static BufferedImage fullCamp;
     static BufferedImage goldCircle;
     static BufferedImage barrack;

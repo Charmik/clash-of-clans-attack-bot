@@ -61,6 +61,7 @@ public class Bot {
             emptyElixir5 = ImageIO.read(new File(path + separator + "emptyElixir5.png"));
             emptyElixir6 = ImageIO.read(new File(path + separator + "emptyElixir6.png"));
             emptyElixir7 = ImageIO.read(new File(path + separator + "emptyElixir7.png"));
+            emptyElixir8 = ImageIO.read(new File(path + separator + "emptyElixir8.png"));
             fullCamp = ImageIO.read(new File(path + separator + "fullCamp.png"));
             goldCircle = ImageIO.read(new File(path + separator + "goldCircle.png"));
             barrack = ImageIO.read(new File(path + separator + "barrack.png"));
@@ -189,13 +190,13 @@ public class Bot {
     }
 
     private static void addCommonElixir(ArrayList<CompareImages> list,
-                                        BufferedImage bigImage, BufferedImage smallImage) {
+                                        BufferedImage bigImage, BufferedImage smallImage, float precise) {
         list.add(new CompareImages(bigImage, smallImage, //left
-                startLeft, finishLeft, new ArrayList<>(), 0.1f));
+                startLeft, finishLeft, new ArrayList<>(), precise));
         list.add(new CompareImages(bigImage, smallImage, //top
-                startTop, finishTop, new ArrayList<>(), 0.1f));
+                startTop, finishTop, new ArrayList<>(), precise));
         list.add(new CompareImages(bigImage, smallImage, //right
-                startRight, finishRight, new ArrayList<>(), 0.1f));
+                startRight, finishRight, new ArrayList<>(), precise));
     }
 
 
@@ -216,12 +217,13 @@ public class Bot {
 
         //list.add(new CompareImages(bf, Variables.fullElixirStorage3,
         //        new Point(400, 100), new Point(900, 500), new ArrayList<>(), 0.12f));
-        addCommonElixir(list, bf, Variables.emptyElixir2);
-        addCommonElixir(list, bf, Variables.emptyElixir3);
-        addCommonElixir(list, bf, Variables.emptyElixir4);
+        addCommonElixir(list, bf, Variables.emptyElixir2,0.1f);
+        addCommonElixir(list, bf, Variables.emptyElixir3,0.1f);
+        addCommonElixir(list, bf, Variables.emptyElixir4,0.1f);
         //addCommonElixir(list, bf, Variables.emptyElixir5);
         //addCommonElixir(list, bf, Variables.emptyElixir6);
-        addCommonElixir(list, bf, Variables.emptyElixir7);
+        addCommonElixir(list, bf, Variables.emptyElixir7,0.1f);
+        addCommonElixir(list, bf, Variables.emptyElixir8,0.03f);
 
         ThreadPoolExecutor threadPoolExecutor = new ThreadPoolExecutor(Runtime.getRuntime().availableProcessors()
                 , 25, 25, TimeUnit.SECONDS, new ArrayBlockingQueue<>(25));

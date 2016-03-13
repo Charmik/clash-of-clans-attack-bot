@@ -51,37 +51,35 @@ public class CompareImages implements Runnable {
         int bestX = 0;
         int bestY = 0;
         double lowestDiff = 10050000;
-        for (int x = start.x; x < finish.x; x++) {
-            for (int y = start.y; y < finish.y - h2; y++) {
+        for (int x = finish.x; x >= start.x; x--) {
+            for (int y = finish.y; y >= start.y; y--) {
                 double comp = compareImages(image1.getSubimage(x, y, w2, h2), image2);
                 if (comp < lowestDiff) {
                     boolean flag = false;
                     for (Recognition.Struct point1 : points) {
                         Point point = point1.point;
-                        if (Math.abs(x - point.x) == 1 && digit == 1 && point1.digit == 5) {
+                        /*if (Math.abs(x - point.x) == 1 && digit == 1 && point1.digit == 5) {
                             break;
+                        }*/
+
+                        if (Math.abs(x - point.x) == 2) {
+                            if ((digit == 1 && point1.digit == 1) || (digit == 7 && point1.digit == 7)) {
+                                flag = true;
+                                break;
+                            }
                         }
-                        if (Math.abs(x - point.x) == 2 && digit == 1 && point1.digit == 1) {
-                            flag = true;
-                            break;
+                        if (Math.abs(x - point.x) == 3) {
+                            if ((digit == 7 && point1.digit == 2) || (digit == 7 && point1.digit == 5)) {
+                                flag = true;
+                                break;
+                            }
                         }
-                        if (Math.abs(x - point.x) == 3 && digit == 7 && point1.digit == 2) {
-                            flag = true;
-                            break;
-                        }
-                        if (Math.abs(x - point.x) == 2 && digit == 7 && point1.digit == 7) {
-                            flag = true;
-                            break;
-                        }
-                        if (Math.abs(x - point.x) == 3 && digit == 7 && point1.digit == 5) {
-                            flag = true;
-                            break;
-                        }
+
                         if (point.x == x || Math.abs(point.x - x) < 2) {
                             flag = true;
                             break;
                         }
-                        if (digit == 1 && point1.digit == 4 && (x - point.x == 3 || x - point.x == 4 || x - point.x == 5)) {
+                        if (digit == 1 && point1.digit == 4 && (x - point.x >= 3 && x - point.x <= 5)) {
                             flag = true;
                             break;
                         }
@@ -103,20 +101,13 @@ public class CompareImages implements Runnable {
 
     private double compareImages(BufferedImage im1, BufferedImage im2) {
         double variation = 0.0f;
-        for (int x = 0; x < im1.getWidth(); x++) {
-            for (int y = 0; y < im1.getHeight(); y++) {
+        for (int x = im1.getWidth() - 1; x >= 0; x--) {
+            for (int y = im1.getHeight() - 1; y >= 0; y--) {
                 int rgb1 = im1.getRGB(x, y);
                 int rgb2 = im2.getRGB(x, y);
-                //TODO: inline
-                int r1 = ((rgb1 >> 16) & 0xFF);
-                int r2 = ((rgb2 >> 16) & 0xFF);
-                int g1 = ((rgb1 >> 8) & 0xFF);
-                int g2 = ((rgb2 >> 8) & 0xFF);
-                int b1 = (rgb1 & 0xFF);
-                int b2 = (rgb2 & 0xFF);
-                int q1 = r1 - r2;
-                int q2 = g1 - g2;
-                int q3 = b1 - b2;
+                int q1 = ((rgb1 >> 16) & 0xFF) - ((rgb2 >> 16) & 0xFF);
+                int q2 = ((rgb1 >> 8) & 0xFF) - ((rgb2 >> 8) & 0xFF);
+                int q3 = (rgb1 & 0xFF) - (rgb2 & 0xFF);
                 variation += Math.sqrt((q1 * q1 +
                         q2 * q2 + q3 * q3) / xx);
                 if (variation > preciseCompare) {

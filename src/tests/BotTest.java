@@ -165,7 +165,7 @@ public class BotTest {
                                 separator + "imagesForTests" + separator + tests.get(i));
                 Path pathDestination = FileSystems.getDefault().getPath(new File(".").getCanonicalPath() +
                         separator + "imagesForTests" + separator + "badBase" + separator + tests.get(i));
-                Files.move(pathSource,pathDestination, StandardCopyOption.REPLACE_EXISTING);
+                //Files.move(pathSource,pathDestination, StandardCopyOption.REPLACE_EXISTING);
             } else {
                 System.out.println("good base!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
                 Path pathSource =

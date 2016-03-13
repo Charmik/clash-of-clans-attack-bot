@@ -57,7 +57,7 @@ class Main {
         //}
 
 
-        Bot.run();
+        //Bot.run();
 
         //Bot.init();
         /*
