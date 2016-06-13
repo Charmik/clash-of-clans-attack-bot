@@ -85,8 +85,8 @@ public class Bot {
 
     }
 
-    public static void getArchers() throws InterruptedException, AWTException {
-        robot.mouseMove(379, 30);
+    public static void getArmy() throws InterruptedException, AWTException {
+        robot.mouseMove(430, 30);
         waitAndClick(100);
         CompareImages ci = new CompareImages(get_screen(), Variables.barrack,
                 firstBarrackStart, firstBarrackFinish, new ArrayList<>(), 0.1f);
@@ -101,7 +101,8 @@ public class Bot {
         waitAndClick(5000);
         Thread.sleep(5000);
         for (int step = 0; step < cntOfBarracks; step++) {
-            robot.mouseMove(archersInBarrack.x, archersInBarrack.y);
+            //robot.mouseMove(archersInBarrack.x, archersInBarrack.y);
+            robot.mouseMove(goblinsInBarrack.x, goblinsInBarrack.y);
             for (int i = 0; i < trainTroops; i++) {
                 waitAndClick(100);
             }
@@ -125,7 +126,7 @@ public class Bot {
             else
                 y = start.y + ((double) y0 / cnt) * i;
             robot.mouseMove((int) x, (int) y);
-            waitAndClick(20);
+            waitAndClick(10);
         }
     }
 
@@ -138,7 +139,7 @@ public class Bot {
                 coordinatesHeroes.add(point);
             }
         }
-
+        /*
         CompareImages ci = new CompareImages(get_screen(), Variables.clanCastleFight,
                 clanCastleFightStart, clanCastleFightFinish, new ArrayList<>(), 0.7f);
         ci.compare();
@@ -149,11 +150,20 @@ public class Bot {
             waitAndClick(100);
             pushTroops(t1, t2, 10);
             pushTroops(t2, t3, 10);
-        }
-        Point startArchers = new Point(250 ,680);
-        robot.mouseMove(startArchers.x, startArchers.y);
-        waitAndClick(100);
+        }*/
 
+        for (Point coordinatesHero : coordinatesHeroes) {
+            Thread.sleep(50);
+            robot.mouseMove(coordinatesHero.x, coordinatesHero.y);
+            waitAndClick(50);
+            Thread.sleep(50);
+            pushTroops(t1, t2, 3);
+        }
+
+        Thread.sleep(3000);
+
+        robot.mouseMove(archersInFight.x, archersInFight.y);
+        waitAndClick(100);
         for (int i = 0; i < 2; i++) {
             pushTroops(t1, t2, 20);
             pushTroops(t2, t3, 45);
@@ -165,19 +175,12 @@ public class Bot {
             }
         }
 
-        for (Point coordinatesHero : coordinatesHeroes) {
-            Thread.sleep(100);
-            robot.mouseMove(coordinatesHero.x, coordinatesHero.y);
-            waitAndClick(100);
-            Thread.sleep(100);
-            pushTroops(t1, t2, 3);
-        }
         if (coordinatesHeroes.size() != 0) {
-            Thread.sleep(15000);
+            Thread.sleep(10000);
         }
 
         for (int i = 0; i < coordinatesHeroes.size(); i++) {
-            Thread.sleep(100);
+            Thread.sleep(50);
             if (i == 1) {
                 Thread.sleep(12000);
             }
@@ -185,7 +188,7 @@ public class Bot {
                 Thread.sleep(1000);
             }
             robot.mouseMove(coordinatesHeroes.get(i).x, coordinatesHeroes.get(i).y);
-            waitAndClick(100);
+            waitAndClick(50);
         }
     }
 
@@ -217,16 +220,18 @@ public class Bot {
 
         //list.add(new CompareImages(bf, Variables.fullElixirStorage3,
         //        new Point(400, 100), new Point(900, 500), new ArrayList<>(), 0.12f));
-        addCommonElixir(list, bf, Variables.emptyElixir2,0.1f);
-        addCommonElixir(list, bf, Variables.emptyElixir3,0.1f);
-        addCommonElixir(list, bf, Variables.emptyElixir4,0.1f);
+        addCommonElixir(list, bf, Variables.emptyElixir2, 0.1f);
+        addCommonElixir(list, bf, Variables.emptyElixir3, 0.1f);
+        addCommonElixir(list, bf, Variables.emptyElixir4, 0.1f);
         //addCommonElixir(list, bf, Variables.emptyElixir5);
         //addCommonElixir(list, bf, Variables.emptyElixir6);
-        addCommonElixir(list, bf, Variables.emptyElixir7,0.1f);
-        addCommonElixir(list, bf, Variables.emptyElixir8,0.03f);
+        addCommonElixir(list, bf, Variables.emptyElixir7, 0.1f);
+        addCommonElixir(list, bf, Variables.emptyElixir8, 0.03f);
 
         ThreadPoolExecutor threadPoolExecutor = new ThreadPoolExecutor(Runtime.getRuntime().availableProcessors()
                 , 25, 25, TimeUnit.SECONDS, new ArrayBlockingQueue<>(25));
+        //TODO: try Future tasks + invoke all
+        //threadPoolExecutor.invokeAll()
         list.forEach(threadPoolExecutor::execute);
         threadPoolExecutor.shutdown();
 
@@ -254,7 +259,7 @@ public class Bot {
         }
         if (!test) {
             System.out.println("SAVE THE BASE");
-            saveImage(gold, elixir);
+            //saveImage(gold, elixir);
         }
         //System.out.println();
         //System.out.println(gold + " " + elixir);
@@ -314,6 +319,13 @@ public class Bot {
         waitAndClick(2000);
         robot.mouseMove(1330, 740);
         waitAndClick(2000);
+
+        robot.keyPress(KeyEvent.VK_WINDOWS);
+        robot.keyPress(KeyEvent.VK_M);  // VK_WINDOWS key still pressed
+        robot.keyRelease(KeyEvent.VK_M);
+        robot.keyRelease(KeyEvent.VK_WINDOWS);
+
+
         robot.mouseMove(EmulatorOnDekstop.x, EmulatorOnDekstop.y);
         waitAndClick(2000);
         waitAndClick(2000);
@@ -406,10 +418,7 @@ public class Bot {
                     break;
                 }
                 if (count % 3 == 0) {
-                    getArchers();
-                }
-                if (fullCamp()) {
-                    break;
+                    getArmy();
                 }
                 if (fullCamp()) {
                     break;
@@ -421,6 +430,9 @@ public class Bot {
                     break;
                 }
                 getTroops();
+                if (fullCamp()) {
+                    break;
+                }
                 fetchCart();
             }
             if (restartAfterBuild) {

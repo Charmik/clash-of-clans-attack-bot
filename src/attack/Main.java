@@ -12,13 +12,14 @@ class Main {
 
     public static void main(String[] args) throws IOException, AWTException, InterruptedException {
         Robot robot = new Robot();
+        //Bot.getArmy();
        	//Thread.sleep(300);
        	//Bot.fight();
         /*
         for (int i = 0; i < 10000;) {
             Bot.fetchCart();
             //Bot.getTroops();
-            //Bot.getArchers();
+            //Bot.getArmy();
             //System.out.println(Bot.fullCamp());
             //System.out.println(Bot.getGold(null) + "  "  + Bot.getElixir(null));
         }
@@ -57,7 +58,7 @@ class Main {
         //}
 
 
-        //Bot.run();
+         Bot.run();
 
         //Bot.init();
         /*
@@ -75,7 +76,7 @@ class Main {
             long t = System.currentTimeMillis();
             if (Bot.goodBase(-1, screen, true)) {
                 System.out.println("good");
-                //robot.mouseMove(500, 500);
+                //robot.mouseMove(500, 500);\
             } else {
                 //robot.mouseMove(100, 500);
                 System.out.println("bad");

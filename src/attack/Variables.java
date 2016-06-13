@@ -15,9 +15,11 @@ public class Variables {
     static final Point next = new Point(1170, 580);
     static final Point firstBarrackStart = new Point(275, 75);
     static final Point firstBarrackFinish = new Point(600, 570);
-    static final Point buttonTrainTroops = new Point(850, 650);
+    static final Point buttonTrainTroops = new Point(900, 650);
     static final Point archersInBarrack = new Point(534, 385);
-    static final Point nextInBarrack = new Point(1170, 360);
+    static final Point goblinsInBarrack = new Point(750, 385);
+    static final Point minionsInBarrack = new Point(534, 385);
+    static final Point nextInBarrack = new Point(1081, 360);
     static final Point agreeFight = new Point(776, 424);
     static final Point barTroopsStart = new Point(250, 580);
     static final Point barTroopsEnd = new Point(600, 730);
@@ -25,6 +27,7 @@ public class Variables {
     static final Point endGold = new Point(300, 150);
     static final Point startElixir = new Point(123,112);
     static final Point endElixir = new Point(230,135);
+    static final Point archersInFight = new Point(250 ,680);
     static final Point t1 = new Point(544, 6);
     static final Point t2 = new Point(800, 3);
     static final Point t3 = new Point(1270, 372);
@@ -33,8 +36,8 @@ public class Variables {
     static final Point t6 = new Point(107, 373);
     static final Point EmulatorOnDekstop = new Point(40, 141);
     static final int cntOfBarracks = 4;
-    static final Point startCamp = new Point(5, 5);
-    static final Point endCamp = new Point(800, 700);
+    static final Point startCamp = new Point(200,200);
+    static final Point endCamp = new Point(600, 600);
     static final Point returnToHome = new Point(140, 630);
     static final Point tryTheseApps = new Point(960, 510);
     static final Point disconnectStart = new Point(306, 269);
