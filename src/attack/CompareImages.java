@@ -103,13 +103,12 @@ public class CompareImages implements Runnable {
         double variation = 0.0f;
         for (int x = im1.getWidth() - 1; x >= 0; x--) {
             for (int y = im1.getHeight() - 1; y >= 0; y--) {
-                int rgb1 = im1.getRGB(x, y);
-                int rgb2 = im2.getRGB(x, y);
-                int q1 = ((rgb1 >> 16) & 0xFF) - ((rgb2 >> 16) & 0xFF);
-                int q2 = ((rgb1 >> 8) & 0xFF) - ((rgb2 >> 8) & 0xFF);
-                int q3 = (rgb1 & 0xFF) - (rgb2 & 0xFF);
-                variation += Math.sqrt((q1 * q1 +
-                        q2 * q2 + q3 * q3) / xx);
+                int[] pixel1 = im1.getRaster().getPixel(x, y, new int[4]);
+                int[] pixel2 = im2.getRaster().getPixel(x, y, new int[4]);
+                variation += Math.sqrt(((pixel1[0] - pixel2[0]) *
+                        (pixel1[0] - pixel2[0]) + (pixel1[1] - pixel2[1]) *
+                        (pixel1[1] - pixel2[1]) + (pixel1[2] - pixel2[2]) *
+                        (pixel1[2] - pixel2[2])) / xx);
                 if (variation > preciseCompare) {
                     return 10050000;
                 }

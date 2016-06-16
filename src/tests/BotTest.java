@@ -180,4 +180,26 @@ public class BotTest {
         }
     }
 
+    public static void main(String[] args) throws AWTException, IOException, InterruptedException {
+        long sum = 0;
+        int index = 0;
+        BufferedImage screen = Bot.get_screen();
+        for (; ; ) {
+            long t = System.currentTimeMillis();
+            if (Bot.goodBase(-1, screen, true)) {
+                System.out.println("good");
+                //robot.mouseMove(500, 500);\
+            } else {
+                //robot.mouseMove(100, 500);
+                System.out.println("bad");
+            }
+            //Bot.collect();
+            t = System.currentTimeMillis() - t;
+            index++;
+            sum += t;
+            System.out.println("index=" + index + " average=" + (sum / index));
+        }
+
+    }
+
 }
