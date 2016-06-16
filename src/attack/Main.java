@@ -2,6 +2,7 @@ package attack;
 
 
 import java.awt.*;
+import java.awt.image.BufferedImage;
 import java.io.IOException;
 
 class Main {
@@ -9,8 +10,8 @@ class Main {
     public static void main(String[] args) throws IOException, AWTException, InterruptedException {
         //Robot robot = new Robot();
         //Bot.getArmy();
-       	//Thread.sleep(300);
-       	//Bot.fight();
+        //Thread.sleep(300);
+        //Bot.fight();
         /*
         for (int i = 0; i < 10000;) {
             Bot.fetchCart();
@@ -54,7 +55,26 @@ class Main {
         //}
 
 
-         Bot.run();
+        //Bot.run();
+
+        long sum = 0;
+        int index = 0;
+        BufferedImage screen = Bot.get_screen();
+        for (; ; ) {
+            long t = System.currentTimeMillis();
+            if (Bot.goodBase(-1, screen, true)) {
+                System.out.println("good");
+                //robot.mouseMove(500, 500);\
+            } else {
+                //robot.mouseMove(100, 500);
+                System.out.println("bad");
+            }
+            //Bot.collect();
+            t = System.currentTimeMillis() - t;
+            index++;
+            sum += t;
+            System.out.println("index=" + index + " average=" + (sum / index));
+        }
 
         //Bot.init();
         /*

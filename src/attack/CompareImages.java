@@ -2,6 +2,7 @@ package attack;
 
 import java.awt.*;
 import java.awt.image.BufferedImage;
+import java.awt.image.DataBufferByte;
 import java.util.ArrayList;
 
 /**
@@ -20,6 +21,7 @@ public class CompareImages implements Runnable {
     private final double denominator;
     private final int digit;
     private Point answer;
+    byte[] pixelByte2;
 
     CompareImages(BufferedImage image1, BufferedImage image2, Point start, Point finish,
                   ArrayList<Recognition.Struct> points) {
@@ -43,6 +45,10 @@ public class CompareImages implements Runnable {
         denominator = D * (image2.getHeight() * image2.getWidth());
         preciseCompare = precise * denominator;
         this.digit = digit;
+
+        //int[] pixels1 = ((DataBufferInt) image1.getRaster().getDataBuffer()).getData();
+        pixelByte2 = ((DataBufferByte) image2.getRaster().getDataBuffer()).getData();
+
     }
 
     public CompareImages compare() {
@@ -104,7 +110,13 @@ public class CompareImages implements Runnable {
         for (int x = im1.getWidth() - 1; x >= 0; x--) {
             for (int y = im1.getHeight() - 1; y >= 0; y--) {
                 int[] pixel1 = im1.getRaster().getPixel(x, y, new int[4]);
-                int[] pixel2 = im2.getRaster().getPixel(x, y, new int[4]);
+
+                int[] pixel2 = new int[3];
+                int pos = (y * 3 * im2.getWidth()) + (x * 3);
+                pixel2[2] = ((int) pixelByte2[pos++] & 0xff); // blue
+                pixel2[1] = (((int) pixelByte2[pos++] & 0xff)); // green
+                pixel2[0] = (((int) pixelByte2[pos] & 0xff)); // red
+
                 variation += Math.sqrt(((pixel1[0] - pixel2[0]) *
                         (pixel1[0] - pixel2[0]) + (pixel1[1] - pixel2[1]) *
                         (pixel1[1] - pixel2[1]) + (pixel1[2] - pixel2[2]) *
