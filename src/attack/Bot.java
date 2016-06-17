@@ -102,7 +102,12 @@ public class Bot {
         Thread.sleep(5000);
         for (int step = 0; step < cntOfBarracks; step++) {
             //robot.mouseMove(archersInBarrack.x, archersInBarrack.y);
-            robot.mouseMove(goblinsInBarrack.x, goblinsInBarrack.y);
+            if (step < 4) {
+                robot.mouseMove(goblinsInBarrack.x, goblinsInBarrack.y);
+            } else {
+                robot.mouseMove(minionsInBarrack.x, minionsInBarrack.y);
+            }
+
             for (int i = 0; i < trainTroops; i++) {
                 waitAndClick(100);
             }
@@ -126,7 +131,7 @@ public class Bot {
             else
                 y = start.y + ((double) y0 / cnt) * i;
             robot.mouseMove((int) x, (int) y);
-            waitAndClick(10);
+            waitAndClick(5);
         }
     }
 
@@ -162,16 +167,21 @@ public class Bot {
 
         Thread.sleep(3000);
 
-        robot.mouseMove(archersInFight.x, archersInFight.y);
-        waitAndClick(100);
-        for (int i = 0; i < 2; i++) {
-            pushTroops(t1, t2, 20);
-            pushTroops(t2, t3, 45);
-            pushTroops(t4, t3, 45);
-            if (i == 0) {
-                pushTroops(t5, t4, 30);
-                pushTroops(t6, t5, 45);
-                pushTroops(t6, t1, 35);
+        for (int k = 0; k < 2; k++) {
+            if (k == 0) robot.mouseMove(firstInFight.x, firstInFight.y);
+            if (k == 1) robot.mouseMove(secondInFight.x, secondInFight.y);
+            waitAndClick(100);
+            for (int i = 0; i < 2; i++) {
+                int[] array = new int[]{20, 45, 45, 30, 45, 35};
+                if (k == 1) array = new int[]{20, 10, 10, 10, 10, 10};
+                pushTroops(t1, t2, array[0]);
+                pushTroops(t2, t3, array[1]);
+                pushTroops(t4, t3, array[2]);
+                if (i == 0) {
+                    pushTroops(t5, t4, array[3]);
+                    pushTroops(t6, t5, array[4]);
+                    pushTroops(t6, t1, array[5]);
+                }
             }
         }
 
@@ -314,6 +324,12 @@ public class Bot {
     }
 
     public static void restart() throws InterruptedException {
+        Thread.sleep(500);
+        robot.keyPress(KeyEvent.VK_WINDOWS);
+        robot.keyPress(KeyEvent.VK_M);  // VK_WINDOWS key still pressed
+        robot.keyRelease(KeyEvent.VK_M);
+        robot.keyRelease(KeyEvent.VK_WINDOWS);
+
         Thread.sleep(1000);
         robot.mouseMove(75, 10);
         waitAndClick(2000);
@@ -324,7 +340,7 @@ public class Bot {
         robot.keyPress(KeyEvent.VK_M);  // VK_WINDOWS key still pressed
         robot.keyRelease(KeyEvent.VK_M);
         robot.keyRelease(KeyEvent.VK_WINDOWS);
-
+        Thread.sleep(500);
 
         robot.mouseMove(EmulatorOnDekstop.x, EmulatorOnDekstop.y);
         waitAndClick(2000);
@@ -543,6 +559,11 @@ public class Bot {
         } catch (Exception e) {
             e.printStackTrace();
         }
+    }
+
+    public static boolean isDisconnect() throws AWTException {
+        BufferedImage bf = get_screen();
+        return bf.getRGB(30, 30) == -16777216;
     }
 
     /*

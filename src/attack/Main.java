@@ -2,7 +2,6 @@ package attack;
 
 
 import java.awt.*;
-import java.awt.image.BufferedImage;
 import java.io.IOException;
 
 class Main {
@@ -55,8 +54,21 @@ class Main {
         //}
 
 
-        //Bot.run();
-
+        //Thread.sleep(5000);
+        //Bot.fight();
+        /*
+        for (;;) {
+            if (Bot.isDisconnect()) {
+                System.out.println("disc");
+            }
+            else {
+                System.out.println("fine");
+            }
+            Thread.sleep(3000);
+        }
+        */
+        Bot.run();
+        /*
         long sum = 0;
         int index = 0;
         BufferedImage screen = Bot.get_screen();
@@ -75,6 +87,7 @@ class Main {
             sum += t;
             System.out.println("index=" + index + " average=" + (sum / index));
         }
+        */
 
         //Bot.init();
         /*

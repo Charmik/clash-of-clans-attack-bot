@@ -3,6 +3,7 @@ package attack;
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.awt.image.DataBufferByte;
+import java.awt.image.DataBufferInt;
 import java.util.ArrayList;
 
 /**
@@ -21,7 +22,10 @@ public class CompareImages implements Runnable {
     private final double denominator;
     private final int digit;
     private Point answer;
-    byte[] pixelByte2;
+    private int[] pixelInt1;
+    private byte[] pixelByte2;
+    private int image1Width;
+    private int image2Width;
 
     CompareImages(BufferedImage image1, BufferedImage image2, Point start, Point finish,
                   ArrayList<Recognition.Struct> points) {
@@ -45,21 +49,42 @@ public class CompareImages implements Runnable {
         denominator = D * (image2.getHeight() * image2.getWidth());
         preciseCompare = precise * denominator;
         this.digit = digit;
+        this.image1Width = image1.getWidth();
+        this.image2Width = image2.getWidth();
 
-        //int[] pixels1 = ((DataBufferInt) image1.getRaster().getDataBuffer()).getData();
+        //FOR TESTS ONLY
+        /*if (image1.getRaster().getDataBuffer() instanceof DataBufferByte) {
+            byte[] pixels = ((DataBufferByte) image1.getRaster().getDataBuffer()).getData();
+            pixelInt1 = new int[pixels.length / 4];
+            for (int pixel = 0, row = 0, col = 0; pixel < pixels.length; pixel += 4) {
+                int argb = 0;
+                argb += (((int) pixels[pixel] & 0xff) << 24); // alpha
+                argb += ((int) pixels[pixel + 1] & 0xff); // blue
+                argb += (((int) pixels[pixel + 2] & 0xff) << 8); // green
+                argb += (((int) pixels[pixel + 3] & 0xff) << 16); // red
+                pixelInt1[pixel/4] = argb;
+                col++;
+                if (col == image1.getWidth()) {
+                    col = 0;
+                    row++;
+                }
+            }
+        }
+        else
+        */
+        {
+            pixelInt1 = ((DataBufferInt) image1.getRaster().getDataBuffer()).getData();
+        }
         pixelByte2 = ((DataBufferByte) image2.getRaster().getDataBuffer()).getData();
-
     }
 
     public CompareImages compare() {
-        int w2 = image2.getWidth();
-        int h2 = image2.getHeight();
         int bestX = 0;
         int bestY = 0;
         double lowestDiff = 10050000;
         for (int x = finish.x; x >= start.x; x--) {
             for (int y = finish.y; y >= start.y; y--) {
-                double comp = compareImages(image1.getSubimage(x, y, w2, h2), image2);
+                double comp = compareImages(x, y, image2);
                 if (comp < lowestDiff) {
                     boolean flag = false;
                     for (Recognition.Struct point1 : points) {
@@ -105,14 +130,34 @@ public class CompareImages implements Runnable {
         return this;
     }
 
-    private double compareImages(BufferedImage im1, BufferedImage im2) {
+    private double compareImages(int x1, int y1, BufferedImage im2) {
         double variation = 0.0f;
-        for (int x = im1.getWidth() - 1; x >= 0; x--) {
-            for (int y = im1.getHeight() - 1; y >= 0; y--) {
-                int[] pixel1 = im1.getRaster().getPixel(x, y, new int[4]);
+        int im2Width = im2.getWidth();
+        for (int y = im2.getHeight() - 1; y >= 0; y--) {
+            for (int x = im2Width - 1; x >= 0; x--) {
+                //int[] pixel1_ = image1.getRaster().getPixel(x + x1, y + y1, new int[4]);
+                //int[] pixel1_ = image1.getRaster().getPixel(0,100, new int[4]);
+
+                int p = pixelInt1[(y + y1) * image1Width + (x + x1)];
+                int[] pixel1 = new int[3];
+                pixel1[2] = p & 0xff;
+                pixel1[1] = (p >> 8) & 0xFF;
+                pixel1[0] = (p >> 16) & 0xFF;
+
+                /*
+                if (pixel1[0] != pixel1_[0]) {
+                    throw new RuntimeException();
+                }
+                if (pixel1[1] != pixel1_[1]) {
+                    throw new RuntimeException();
+                }if (pixel1[2] != pixel1_[2]) {
+                    throw new RuntimeException();
+                }
+                */
+
 
                 int[] pixel2 = new int[3];
-                int pos = (y * 3 * im2.getWidth()) + (x * 3);
+                int pos = (y * 3 * im2Width) + (x * 3);
                 pixel2[2] = ((int) pixelByte2[pos++] & 0xff); // blue
                 pixel2[1] = (((int) pixelByte2[pos++] & 0xff)); // green
                 pixel2[0] = (((int) pixelByte2[pos] & 0xff)); // red
