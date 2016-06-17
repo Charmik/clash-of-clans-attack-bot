@@ -26,6 +26,7 @@ public class CompareImages implements Runnable {
     private byte[] pixelByte2;
     private int image1Width;
     private int image2Width;
+    private int image2Height;
 
     CompareImages(BufferedImage image1, BufferedImage image2, Point start, Point finish,
                   ArrayList<Recognition.Struct> points) {
@@ -51,9 +52,11 @@ public class CompareImages implements Runnable {
         this.digit = digit;
         this.image1Width = image1.getWidth();
         this.image2Width = image2.getWidth();
+        this.image2Height = image2.getHeight();
 
         //FOR TESTS ONLY
-        /*if (image1.getRaster().getDataBuffer() instanceof DataBufferByte) {
+        /*
+        if (image1.getRaster().getDataBuffer() instanceof DataBufferByte) {
             byte[] pixels = ((DataBufferByte) image1.getRaster().getDataBuffer()).getData();
             pixelInt1 = new int[pixels.length / 4];
             for (int pixel = 0, row = 0, col = 0; pixel < pixels.length; pixel += 4) {
@@ -84,7 +87,7 @@ public class CompareImages implements Runnable {
         double lowestDiff = 10050000;
         for (int x = finish.x; x >= start.x; x--) {
             for (int y = finish.y; y >= start.y; y--) {
-                double comp = compareImages(x, y, image2);
+                double comp = compareImages(x, y);
                 if (comp < lowestDiff) {
                     boolean flag = false;
                     for (Recognition.Struct point1 : points) {
@@ -130,16 +133,14 @@ public class CompareImages implements Runnable {
         return this;
     }
 
-    private double compareImages(int x1, int y1, BufferedImage im2) {
+    private double compareImages(int x1, int y1) {
         double variation = 0.0f;
-        int im2Width = im2.getWidth();
-        for (int y = im2.getHeight() - 1; y >= 0; y--) {
-            for (int x = im2Width - 1; x >= 0; x--) {
+        for (int y = image2Height - 1; y >= 0; y--) {
+            for (int x = image2Width - 1; x >= 0; x--) {
                 //int[] pixel1_ = image1.getRaster().getPixel(x + x1, y + y1, new int[4]);
-                //int[] pixel1_ = image1.getRaster().getPixel(0,100, new int[4]);
 
-                int p = pixelInt1[(y + y1) * image1Width + (x + x1)];
                 int[] pixel1 = new int[3];
+                int p = pixelInt1[(y + y1) * image1Width + (x + x1)];
                 pixel1[2] = p & 0xff;
                 pixel1[1] = (p >> 8) & 0xFF;
                 pixel1[0] = (p >> 16) & 0xFF;
@@ -156,8 +157,9 @@ public class CompareImages implements Runnable {
                 */
 
 
+
                 int[] pixel2 = new int[3];
-                int pos = (y * 3 * im2Width) + (x * 3);
+                int pos = (y * 3 * image2Width) + (x * 3);
                 pixel2[2] = ((int) pixelByte2[pos++] & 0xff); // blue
                 pixel2[1] = (((int) pixelByte2[pos++] & 0xff)); // green
                 pixel2[0] = (((int) pixelByte2[pos] & 0xff)); // red
