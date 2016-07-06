@@ -5,6 +5,7 @@ import attack.Variables;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
+import org.openjdk.jmh.annotations.Benchmark;
 
 import javax.imageio.ImageIO;
 import java.awt.*;
@@ -24,6 +25,29 @@ public class BotTest {
     private final static ArrayList<String> tests = new ArrayList<>();
     private final static ArrayList<Integer> gold = new ArrayList<>();
     private final static ArrayList<Integer> elixir = new ArrayList<>();
+
+    public static void main(String[] args) throws AWTException, IOException, InterruptedException {
+        long sum = 0;
+        int index = 0;
+        BufferedImage screen = Bot.get_screen();
+        for (; ; ) {
+            long t = System.currentTimeMillis();
+            if (Bot.goodBase(-1, screen, true)) {
+                System.out.println("good");
+                //robot.mouseMove(500, 500);\
+            } else {
+                //robot.mouseMove(100, 500);
+                System.out.println("bad");
+            }
+            //Bot.collect();
+            t = System.currentTimeMillis() - t;
+            index++;
+            sum += t;
+            System.out.println("index=" + index + " average=" + (sum / index));
+        }
+
+    }
+
 
     @Before
     public void init() throws AWTException, InterruptedException, IOException {
@@ -162,7 +186,7 @@ public class BotTest {
             if (!flag) {
                 //System.out.println("bad");
                 Path pathSource = FileSystems.getDefault().getPath(new File(".").getCanonicalPath() +
-                                separator + "imagesForTests" + separator + tests.get(i));
+                        separator + "imagesForTests" + separator + tests.get(i));
                 Path pathDestination = FileSystems.getDefault().getPath(new File(".").getCanonicalPath() +
                         separator + "imagesForTests" + separator + "badBase" + separator + tests.get(i));
                 //Files.move(pathSource,pathDestination, StandardCopyOption.REPLACE_EXISTING);
@@ -173,33 +197,18 @@ public class BotTest {
                                 separator + "imagesForTests" + separator + tests.get(i));
                 Path pathDestination = FileSystems.getDefault().getPath(new File(".").getCanonicalPath() +
                         separator + "imagesForTests" + separator + "goodBase" + separator + tests.get(i));
-                Files.move(pathSource,pathDestination, StandardCopyOption.REPLACE_EXISTING);
+                Files.move(pathSource, pathDestination, StandardCopyOption.REPLACE_EXISTING);
             }
             //Assert.assertEquals(flag, false);
 
         }
     }
 
-    public static void main(String[] args) throws AWTException, IOException, InterruptedException {
-        long sum = 0;
-        int index = 0;
-        BufferedImage screen = Bot.get_screen();
-        for (; ; ) {
-            long t = System.currentTimeMillis();
-            if (Bot.goodBase(-1, screen, true)) {
-                System.out.println("good");
-                //robot.mouseMove(500, 500);\
-            } else {
-                //robot.mouseMove(100, 500);
-                System.out.println("bad");
-            }
-            //Bot.collect();
-            t = System.currentTimeMillis() - t;
-            index++;
-            sum += t;
-            System.out.println("index=" + index + " average=" + (sum / index));
-        }
 
+    @Benchmark
+    //@Warmup(iterations = 5)
+    //@Measurement(iterations = 5)
+    public boolean measurePerfomance() throws AWTException, IOException, InterruptedException {
+        return Bot.goodBase(-1, Bot.get_screen(), true);
     }
-
 }

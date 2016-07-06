@@ -16,20 +16,18 @@ import java.util.concurrent.atomic.AtomicBoolean;
 import static attack.Variables.*;
 
 /**
- * Created by charm on 09.08.2015.
+ * Created by charm
  */
 public class Bot {
 
-    static Point startLeft = new Point(200, 200);
-    static Point finishLeft = new Point(600, 600);
-
-    static Point startTop = new Point(300, 30);
-    static Point finishTop = new Point(900, 400);
-
-    static Point startRight = new Point(700, 150);
-    static Point finishRight = new Point(1100, 600);
-
-    static ArrayList<BufferedImage> heroes;
+    private static final ArrayList<CompareImages> listOfTasks = new ArrayList<>();
+    private static Point startLeft = new Point(200, 200);
+    private static Point finishLeft = new Point(600, 600);
+    private static Point startTop = new Point(300, 30);
+    private static Point finishTop = new Point(900, 400);
+    private static Point startRight = new Point(700, 150);
+    private static Point finishRight = new Point(1100, 600);
+    private static ArrayList<BufferedImage> heroes = new ArrayList<>();
 
     static {
         System.out.println("CORES=" + Runtime.getRuntime().availableProcessors());
@@ -37,15 +35,17 @@ public class Bot {
         try {
             path = new File(".").getCanonicalPath();
         } catch (IOException e) {
+            System.out.println(e.getMessage());
         }
         String separator = Variables.separator;
-        System.out.println("path = " + path);
         try {
             robot = new Robot();
         } catch (AWTException e) {
-            e.printStackTrace();
+            System.out.println(e.getMessage());
         }
         try {
+            path = path + separator + "images" + separator;
+            System.out.println(path);
             queen = ImageIO.read(new File(path + separator + "queen.png"));
             king = ImageIO.read(new File(path + separator + "king.png"));
             warden = ImageIO.read(new File(path + separator + "warden.png"));
@@ -63,20 +63,20 @@ public class Bot {
             emptyElixir7 = ImageIO.read(new File(path + separator + "emptyElixir7.png"));
             emptyElixir8 = ImageIO.read(new File(path + separator + "emptyElixir8.png"));
             fullCamp = ImageIO.read(new File(path + separator + "fullCamp.png"));
+            barrackIsFull = ImageIO.read(new File(path + separator + "barrackIsFull.png"));
             goldCircle = ImageIO.read(new File(path + separator + "goldCircle.png"));
             barrack = ImageIO.read(new File(path + separator + "barrack.png"));
             clanCastle = ImageIO.read(new File(path + separator + "clanCastle.png"));
             clanCastleFight = ImageIO.read(new File(path + separator + "clanCastleFight.png"));
             disconnect = ImageIO.read(new File(path + separator + "disconnect.png"));
             cart = ImageIO.read(new File(path + separator + "cart.png"));
+            minions = ImageIO.read(new File(path + separator + "minions.png"));
 
-            heroes = new ArrayList<>();
             heroes.add(king);
-            heroes.add(queen);
             heroes.add(warden);
-
+            heroes.add(queen);
         } catch (IOException e) {
-
+            System.out.println(e.getMessage());
         }
         needToWait = new AtomicBoolean();
         //Disconnect disconnect = new Disconnect();
@@ -85,7 +85,8 @@ public class Bot {
 
     }
 
-    public static void getArmy() throws InterruptedException, AWTException {
+    static void getArmy() throws InterruptedException, AWTException {
+        int barracksCount = cntOfBarracks + 2;
         robot.mouseMove(430, 30);
         waitAndClick(100);
         CompareImages ci = new CompareImages(get_screen(), Variables.barrack,
@@ -100,8 +101,7 @@ public class Bot {
         robot.mouseMove(buttonTrainTroops.x, buttonTrainTroops.y);
         waitAndClick(5000);
         Thread.sleep(5000);
-        for (int step = 0; step < cntOfBarracks; step++) {
-            //robot.mouseMove(archersInBarrack.x, archersInBarrack.y);
+        for (int step = 0; step < barracksCount; step++) {
             if (step < 4) {
                 robot.mouseMove(goblinsInBarrack.x, goblinsInBarrack.y);
             } else {
@@ -109,7 +109,7 @@ public class Bot {
             }
 
             for (int i = 0; i < trainTroops; i++) {
-                waitAndClick(100);
+                waitAndClick(30);
             }
             robot.mouseMove(nextInBarrack.x, nextInBarrack.y);
             waitAndClick(2000);
@@ -120,7 +120,7 @@ public class Bot {
         Thread.sleep(500);
     }
 
-    public static void pushTroops(Point start, Point finish, int cnt) throws InterruptedException {
+    static void pushTroops(Point start, Point finish, int cnt) throws InterruptedException {
         int x0 = Math.abs(start.x - finish.x) + 1;
         int y0 = Math.abs(start.y - finish.y) + 1;
         for (int i = 1; i <= cnt; i++) {
@@ -131,12 +131,14 @@ public class Bot {
             else
                 y = start.y + ((double) y0 / cnt) * i;
             robot.mouseMove((int) x, (int) y);
-            waitAndClick(5);
+            waitAndClick(10);
         }
     }
 
-    public static void fight() throws InterruptedException, AWTException {
+    static void startAttack() throws InterruptedException, AWTException {
+        System.out.println("start attack");
         ArrayList<Point> coordinatesHeroes = new ArrayList<>();
+        //TODO: check heroes < 2 then dont use.
         for (int i = 0; i < 3; i++) {
             Point point = new CompareImages(get_screen(), heroes.get(i), barTroopsStart,
                     barTroopsEnd, new ArrayList<>(), 0.07f).compare().result();
@@ -144,6 +146,8 @@ public class Bot {
                 coordinatesHeroes.add(point);
             }
         }
+        Point minionsResult = new CompareImages(get_screen(), minions, barTroopsStart,
+                barTroopsEnd, new ArrayList<>(), 0.07f).compare().result();
         /*
         CompareImages ci = new CompareImages(get_screen(), Variables.clanCastleFight,
                 clanCastleFightStart, clanCastleFightFinish, new ArrayList<>(), 0.7f);
@@ -165,37 +169,46 @@ public class Bot {
             pushTroops(t1, t2, 3);
         }
 
-        Thread.sleep(3000);
+        Thread.sleep(10000);
 
-        for (int k = 0; k < 2; k++) {
+        int[] troopsArray;
+        if (minionsResult == null) {
+            troopsArray = new int[]{25, 45, 45, 40, 45, 35};
+        } else {
+            troopsArray = new int[]{20, 20, 20, 25, 20, 15};
+        }
+
+        int cycles = minionsResult == null ? 1 : 2;
+        for (int k = 0; k < cycles; k++) {
             if (k == 0) robot.mouseMove(firstInFight.x, firstInFight.y);
             if (k == 1) robot.mouseMove(secondInFight.x, secondInFight.y);
-            waitAndClick(100);
-            for (int i = 0; i < 2; i++) {
-                int[] array = new int[]{20, 45, 45, 30, 45, 35};
-                if (k == 1) array = new int[]{20, 10, 10, 10, 10, 10};
-                pushTroops(t1, t2, array[0]);
-                pushTroops(t2, t3, array[1]);
-                pushTroops(t4, t3, array[2]);
-                if (i == 0) {
-                    pushTroops(t5, t4, array[3]);
-                    pushTroops(t6, t5, array[4]);
-                    pushTroops(t6, t1, array[5]);
+            waitAndClick(50);
+            int circles = 2;
+            if (k == 1) circles = 3;
+            for (int i = 0; i < circles; i++) {
+                if (k == 1) troopsArray = new int[]{5, 5, 5, 8, 5, 5};
+                pushTroops(t1, t2, troopsArray[0]);
+                pushTroops(t2, t3, troopsArray[1]);
+                pushTroops(t4, t3, troopsArray[2]);
+                if (i == 0 || k == 1) {
+                    pushTroops(t5, t4, troopsArray[3]);
+                    pushTroops(t6, t5, troopsArray[4]);
+                    pushTroops(t6, t1, troopsArray[5]);
                 }
             }
         }
 
         if (coordinatesHeroes.size() != 0) {
-            Thread.sleep(10000);
+            Thread.sleep(9000);
         }
 
         for (int i = 0; i < coordinatesHeroes.size(); i++) {
             Thread.sleep(50);
             if (i == 1) {
-                Thread.sleep(12000);
+                Thread.sleep(3000);
             }
             if (i == 2) {
-                Thread.sleep(1000);
+                Thread.sleep(12000);
             }
             robot.mouseMove(coordinatesHeroes.get(i).x, coordinatesHeroes.get(i).y);
             waitAndClick(50);
@@ -212,7 +225,6 @@ public class Bot {
                 startRight, finishRight, new ArrayList<>(), precise));
     }
 
-
     public static boolean goodBase(int gold, BufferedImage bf, boolean test) throws AWTException, InterruptedException, IOException {
         int localGold = 200000;
         int localElixir = 200000;
@@ -225,24 +237,22 @@ public class Bot {
         if (bf == null) {
             bf = get_screen();
         }
+        listOfTasks.clear();
+        addCommonElixir(listOfTasks, bf, Variables.emptyElixir2, 0.1f);
+        addCommonElixir(listOfTasks, bf, Variables.emptyElixir3, 0.1f);
+        addCommonElixir(listOfTasks, bf, Variables.emptyElixir4, 0.1f);
+        addCommonElixir(listOfTasks, bf, Variables.emptyElixir7, 0.1f);
+        addCommonElixir(listOfTasks, bf, Variables.emptyElixir8, 0.03f);
 
-        ArrayList<CompareImages> list = new ArrayList<>();
+        ThreadPoolExecutor threadPoolExecutor =
+                new ThreadPoolExecutor(Runtime.getRuntime().availableProcessors()
+                        , 25, 25, TimeUnit.SECONDS, new ArrayBlockingQueue<>(25));
 
-        //list.add(new CompareImages(bf, Variables.fullElixirStorage3,
-        //        new Point(400, 100), new Point(900, 500), new ArrayList<>(), 0.12f));
-        addCommonElixir(list, bf, Variables.emptyElixir2, 0.1f);
-        addCommonElixir(list, bf, Variables.emptyElixir3, 0.1f);
-        addCommonElixir(list, bf, Variables.emptyElixir4, 0.1f);
-        //addCommonElixir(list, bf, Variables.emptyElixir5);
-        //addCommonElixir(list, bf, Variables.emptyElixir6);
-        addCommonElixir(list, bf, Variables.emptyElixir7, 0.1f);
-        addCommonElixir(list, bf, Variables.emptyElixir8, 0.03f);
+        //threadPoolExecutor.invokeAll(listOfTasks);
 
-        ThreadPoolExecutor threadPoolExecutor = new ThreadPoolExecutor(Runtime.getRuntime().availableProcessors()
-                , 25, 25, TimeUnit.SECONDS, new ArrayBlockingQueue<>(25));
         //TODO: try Future tasks + invoke all
         //threadPoolExecutor.invokeAll()
-        list.forEach(threadPoolExecutor::execute);
+        listOfTasks.forEach(threadPoolExecutor::execute);
         threadPoolExecutor.shutdown();
 
         int elixir = getElixir(bf);
@@ -258,28 +268,37 @@ public class Bot {
 
         threadPoolExecutor.awaitTermination(25, TimeUnit.SECONDS);
 
-        for (int i = 0; i < list.size(); i++) {
-            CompareImages e = list.get(i);
+        for (CompareImages e : listOfTasks) {
             if (e.result() != null) {
                 //if (!test) {
-                System.out.println("bad base because of " + i);
+                //System.out.println("bad base because of " + i);
                 //}
                 return false;
             }
         }
+        /*
         if (!test) {
             System.out.println("SAVE THE BASE");
-            //saveImage(gold, elixir);
+            saveImage(gold, elixir);
         }
-        //System.out.println();
-        //System.out.println(gold + " " + elixir);
+        System.out.println();
+        System.out.println(gold + " " + elixir);
+        */
         return true;
 
     }
 
-    public static boolean fullCamp() throws AWTException {
+    public static boolean fullCamp() throws AWTException, InterruptedException {
+        robot.mouseMove(340, 160);
+        waitAndClick(500);
         CompareImages ci = new CompareImages(get_screen(), Variables.fullCamp,
                 startCamp, endCamp, new ArrayList<>(), 0.1f);
+        ci.compare();
+        if (ci.result() != null) {
+            return true;
+        }
+        ci = new CompareImages(get_screen(), Variables.barrackIsFull,
+                startBarrack, endBarrack, new ArrayList<>(), 0.1f);
         ci.compare();
         return ci.result() != null;
     }
@@ -293,7 +312,7 @@ public class Bot {
     public static void decreaseZoom() throws InterruptedException {
         for (int w = 0; w < countDecreaseZoom; w++) {
             robot.keyPress(KeyEvent.VK_DOWN);
-            Thread.sleep(3000);
+            Thread.sleep(1000);
         }
     }
 
@@ -410,7 +429,7 @@ public class Bot {
             decreaseZoom();
             cameraToUp();
             //saveImage(0, (int) System.currentTimeMillis());
-            robot.mouseMove(660, 580);  //exit fight
+            robot.mouseMove(660, 580);  //exit startAttack
             waitAndClick(300);
             int count = -1;
             boolean restartAfterBuild = false;
@@ -429,11 +448,11 @@ public class Bot {
                 if (fullCamp()) {
                     break;
                 }
-                if (count == 7) {
+                if (count == 10) {
                     restartAfterBuild = true;
                     break;
                 }
-                if (count % 3 == 0) {
+                if (count % 2 == 0) {
                     getArmy();
                 }
                 if (fullCamp()) {
@@ -446,27 +465,41 @@ public class Bot {
                     break;
                 }
                 getTroops();
-                if (fullCamp()) {
+                fetchCart();
+                boolean needToAttack = false;
+                for (int i = 0; i < 10; i++) {
+                    if (fullCamp()) {
+                        needToAttack = true;
+                        break;
+                    }
+                    CompareImages ci = new CompareImages(get_screen(), Variables.barrack,
+                            firstBarrackStart, firstBarrackFinish, new ArrayList<>(), 0.1f);
+                    ci.compare();
+                    if (ci.result() == null) {
+                        break;
+                    }
+                    Thread.sleep(10000);
+                }
+                if (needToAttack) {
                     break;
                 }
-                fetchCart();
             }
             if (restartAfterBuild) {
                 continue;
             }
-
             decreaseZoom();
             getTroops();
             if (!fullCamp()) {
                 continue;
             }
-            waitAndClick(2000);
+            System.gc();
+            waitAndClick(500);
             robot.mouseMove(attackButton.x, attackButton.y);
-            waitAndClick(5000);
+            waitAndClick(500);
             Thread.sleep(5000);
 
             robot.mouseMove(findMatch.x, findMatch.y);
-            waitAndClick(1000);
+            waitAndClick(500);
             Thread.sleep(1000);
 
             robot.mouseMove(agreeFight.x, agreeFight.y);
@@ -482,12 +515,12 @@ public class Bot {
                 robot.keyPress(KeyEvent.VK_ENTER);
                 gold = 0;
                 iterations++;
-                if (iterations == 100) {
+                if (iterations == 500) {
                     break;
                 }
 
-                long startTime = System.currentTimeMillis();
-                long currentTime = System.currentTimeMillis();
+                long currentTime;
+                long startTime = currentTime = System.currentTimeMillis();
                 while (currentTime - startTime < 15000) {
                     gold = getGold(null);
                     if (gold > 0) {
@@ -495,7 +528,6 @@ public class Bot {
                     }
                     currentTime = System.currentTimeMillis();
                 }
-
                 if (gold == 0) {
                     break;
                 }
@@ -512,7 +544,7 @@ public class Bot {
                     break;
                 }
                 prevGold = gold;
-                if (System.currentTimeMillis() - startTime < 15000) {
+                if (System.currentTimeMillis() - startTime < 5000) {
                     Thread.sleep(5000);
                 }
                 robot.mouseMove(next.x, next.y);
@@ -520,7 +552,7 @@ public class Bot {
             }
             if (gold != 0 && prevGold != gold) {
                 System.out.println("iterations=" + iterations);
-                fight();
+                startAttack();
             }
         }
     }

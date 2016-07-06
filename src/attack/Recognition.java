@@ -52,7 +52,9 @@ class Recognition {
                     if ((digit == 1 || digit == 7 || digit == 4 || digit == 8) && j > 0) {
                         addFrontToOne += "_";
                     }
-                    BufferedImage image = ImageIO.read(new File(path + Variables.separator + addFrontToOne + digit + add + ".png"));
+                    BufferedImage image = ImageIO.read(new File(path + Variables.separator
+                            + "images" + Variables.separator
+                            + addFrontToOne + digit + add + ".png"));
                     while (true) {
                         Point tmp;
                         float precise = 0.06f;

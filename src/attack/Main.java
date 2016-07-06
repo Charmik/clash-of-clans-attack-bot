@@ -7,18 +7,22 @@ import java.io.IOException;
 class Main {
 
     public static void main(String[] args) throws IOException, AWTException, InterruptedException {
+
+
         //Robot robot = new Robot();
-        //Bot.getArmy();
-        //Thread.sleep(300);
-        //Bot.fight();
         /*
-        for (int i = 0; i < 10000;) {
-            Bot.fetchCart();
+        for (int i = 0; i < 1;) {
+            //Bot.fetchCart();
             //Bot.getTroops();
             //Bot.getArmy();
             //System.out.println(Bot.fullCamp());
-            //System.out.println(Bot.getGold(null) + "  "  + Bot.getElixir(null));
+            //Thread.sleep(10000);
+            System.out.println(Bot.getGold(null) + "  "  + Bot.getElixir(null));
         }
+        */
+
+        Bot.run();
+        
             //System.out.println(Bot.getElixir(null));\
 
             /*
@@ -55,7 +59,7 @@ class Main {
 
 
         //Thread.sleep(5000);
-        //Bot.fight();
+        //Bot.startAttack();
         /*
         for (;;) {
             if (Bot.isDisconnect()) {
@@ -67,7 +71,6 @@ class Main {
             Thread.sleep(3000);
         }
         */
-        Bot.run();
         /*
         long sum = 0;
         int index = 0;
@@ -92,7 +95,7 @@ class Main {
         //Bot.init();
         /*
         for (int i = 1; i < 100; i++) {
-            Bot.fight();
+            Bot.startAttack();
             System.out.println("iter");
             Thread.sleep(1000);
         }

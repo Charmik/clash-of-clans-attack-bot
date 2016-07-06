@@ -37,8 +37,10 @@ public class Variables {
     static final Point t6 = new Point(107, 373);
     static final Point EmulatorOnDekstop = new Point(40, 141);
     static final int cntOfBarracks = 4;
-    static final Point startCamp = new Point(200,200);
-    static final Point endCamp = new Point(600, 600);
+    static final Point startCamp = new Point(250, 315);
+    static final Point endCamp = new Point(550, 620);
+    static final Point startBarrack = new Point(850, 320);
+    static final Point endBarrack = new Point(1010, 460);
     static final Point returnToHome = new Point(140, 630);
     static final Point tryTheseApps = new Point(960, 510);
     static final Point disconnectStart = new Point(306, 269);
@@ -59,6 +61,7 @@ public class Variables {
     static BufferedImage king;
     static BufferedImage queen;
     static BufferedImage warden;
+    static BufferedImage minions;
     static BufferedImage fullElixirStorage3;
     static BufferedImage fullElixirStorageBoost1;
     static BufferedImage fullElixirStorageBoost2;
@@ -73,6 +76,7 @@ public class Variables {
     static BufferedImage emptyElixir7;
     static BufferedImage emptyElixir8;
     static BufferedImage fullCamp;
+    static BufferedImage barrackIsFull;
     static BufferedImage goldCircle;
     static BufferedImage barrack;
     static BufferedImage clanCastle;
