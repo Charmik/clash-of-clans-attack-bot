@@ -1,5 +1,6 @@
 package tests;
 
+/*
 import attack.Bot;
 import attack.Variables;
 import org.junit.Assert;
@@ -11,15 +12,17 @@ import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
+*/
 
 /**
  * Created by Charm
  */
 public class PartTests {
-    private static final String separator = Variables.separator;
-    private static ArrayList<String> tests;
-    private static ArrayList<Integer> gold;
-    private static ArrayList<Integer> elixir;
+    /*
+    private final String separator = Variables.separator;
+    private ArrayList<String> tests;
+    private ArrayList<Integer> gold;
+    private ArrayList<Integer> elixir;
 
     public void init(String suffix) throws AWTException, InterruptedException, IOException {
         tests = new ArrayList<>();
@@ -168,6 +171,6 @@ public class PartTests {
         }
         System.out.println("badBases=" + countBadBases + " size=" + tests.size());
     }
-
+    */
 
 }

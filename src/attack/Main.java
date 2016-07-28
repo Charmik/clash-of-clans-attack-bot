@@ -9,6 +9,23 @@ class Main {
     public static void main(String[] args) throws IOException, AWTException, InterruptedException {
 
 
+        /*
+        BufferedImage screen = Bot.get_screen();
+        if (screen.getRaster().getDataBuffer() instanceof DataBufferByte) {
+            System.out.println("1");
+        } else {
+            System.out.println("2");
+        }
+        Bot.saveImage(123, 456);
+
+        BufferedImage image = BotTest.getImage("123_456.png");
+        if (image.getRaster().getDataBuffer() instanceof DataBufferByte) {
+            System.out.println("1");
+        } else {
+            System.out.println("2");
+        }
+        */
+
         //Robot robot = new Robot();
         /*
         for (int i = 0; i < 1;) {
@@ -22,8 +39,8 @@ class Main {
         */
 
         Bot.run();
-        
-            //System.out.println(Bot.getElixir(null));\
+
+        //System.out.println(Bot.getElixir(null));\
 
             /*
             Thread.sleep(1000);

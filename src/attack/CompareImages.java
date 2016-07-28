@@ -107,10 +107,6 @@ public class CompareImages implements Callable, Runnable {
                     boolean flag = false;
                     for (Recognition.Struct point1 : points) {
                         Point point = point1.point;
-                        /*if (Math.abs(x - point.x) == 1 && digit == 1 && point1.digit == 5) {
-                            break;
-                        }*/
-
                         if (Math.abs(x - point.x) == 2) {
                             if ((digit == 1 && point1.digit == 1) || (digit == 7 && point1.digit == 7)) {
                                 flag = true;
@@ -123,7 +119,6 @@ public class CompareImages implements Callable, Runnable {
                                 break;
                             }
                         }
-
                         if (point.x == x || Math.abs(point.x - x) < 2) {
                             flag = true;
                             break;

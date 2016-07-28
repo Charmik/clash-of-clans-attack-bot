@@ -36,7 +36,7 @@ public class Variables {
     static final Point t5 = new Point(358, 577);
     static final Point t6 = new Point(107, 373);
     static final Point EmulatorOnDekstop = new Point(40, 141);
-    static final int cntOfBarracks = 4;
+    static final int cntOfBarracks = 6;
     static final Point startCamp = new Point(250, 315);
     static final Point endCamp = new Point(550, 620);
     static final Point startBarrack = new Point(850, 320);

@@ -86,7 +86,7 @@ public class Bot {
     }
 
     static void getArmy() throws InterruptedException, AWTException {
-        int barracksCount = cntOfBarracks + 2;
+        int barracksCount = cntOfBarracks;
         robot.mouseMove(430, 30);
         waitAndClick(100);
         CompareImages ci = new CompareImages(get_screen(), Variables.barrack,
@@ -226,8 +226,11 @@ public class Bot {
     }
 
     public static boolean goodBase(int gold, BufferedImage bf, boolean test) throws AWTException, InterruptedException, IOException {
-        int localGold = 200000;
-        int localElixir = 200000;
+        int localGold = 150000;
+        int localElixir = 150000;
+        if (cntOfBarracks < 4) {
+            localElixir = localGold = 200000;
+        }
         if (!test) {
             if (gold < localGold && gold != -1) {
                 //System.out.println("gold < then we need");
@@ -445,9 +448,7 @@ public class Bot {
                 decreaseZoom();
                 cameraToUp();
                 count++;
-                if (fullCamp()) {
-                    break;
-                }
+                if (checkFullCamp()) break;
                 if (count == 10) {
                     restartAfterBuild = true;
                     break;
@@ -455,20 +456,16 @@ public class Bot {
                 if (count % 2 == 0) {
                     getArmy();
                 }
-                if (fullCamp()) {
-                    break;
-                }
-                for (int i = 0; i < 8; i++) {
+                if (checkFullCamp()) break;
+                for (int i = 0; i < 12; i++) {
                     collect();
                 }
-                if (fullCamp()) {
-                    break;
-                }
+                if (checkFullCamp()) break;
                 getTroops();
                 fetchCart();
                 boolean needToAttack = false;
                 for (int i = 0; i < 10; i++) {
-                    if (fullCamp()) {
+                    if (checkFullCamp()) {
                         needToAttack = true;
                         break;
                     }
@@ -506,7 +503,6 @@ public class Bot {
             waitAndClick(5000);
 
             int iterations = 0;
-
             int prevGold = 0;
             int gold;
             while (true) {
@@ -557,10 +553,17 @@ public class Bot {
         }
     }
 
+    private static boolean checkFullCamp() throws AWTException, InterruptedException {
+        if (fullCamp()) {
+            return true;
+        }
+        Thread.sleep(30000);
+        return fullCamp();
+    }
+
     private static void restartWifi() {
         Runtime runtime = Runtime.getRuntime();
         try {
-            //runtime.exec(new String[]{"cmd.exe", "/c", "netsh interface set interface \"Wireless Network Connection\" disable"});
             runtime.exec(new String[]{"cmd.exe", "/c", "netsh interface set interface \"Wireless Network Connection\" enable"});
         } catch (IOException e) {
             System.out.println("can't restartWifi" + e.getMessage());
